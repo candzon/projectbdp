@@ -1,0 +1,6 @@
+/* input or select with attribute readonly, the cursor will not allowed, and not clickable */
+input[readonly],
+select[readonly] {
+	cursor: not-allowed;
+	pointer-events: none;
+}
