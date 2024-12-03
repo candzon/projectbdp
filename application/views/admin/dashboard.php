@@ -33,6 +33,9 @@
       <?php foreach ($get_id_skdp as $row) {
         $get_id_skdp = $row->id_detail_skdp;
         $periode_akhir = $row->periode_akhir;
+        // var_dump([$get_id_skdp, $periode_akhir]);
+        // die;
+
       ?>
         <a href="<?php echo base_url('data_skdp/tampil_data_skdp/' . $get_id_skdp . '?periode_akhir=' . $periode_akhir) ?>">
           <div class="card border-left-info shadow h-100 py-2">
@@ -49,49 +52,65 @@
             </div>
           </div>
         </a>
-      <?php } ?>
+      <?php break;
+      } ?>
     </div>
 
     <!-- Akta Sewa Card Example -->
     <div class="col-xl-3 col-md-6 mb-4">
-      <a href="<?php echo base_url('data_akta/tampil_data_akta') ?>">
-        <div class="card border-left-info shadow h-100 py-2">
-          <div class="card-body">
-            <div class="row no-gutters align-items-center">
-              <div class="col mr-2">
-                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Akta Sewa</div>
-                <div class="h5 mb-0 font-weight-bold text-gray-800">
+
+      <?php foreach ($get_id_akta as $row) {
+        $get_id_akta = $row->id_detail_akta;
+        $periode_akhir = $row->periode_akhir;
+      ?>
+        <a href="<?php echo base_url('data_akta/tampil_data_akta/' . $get_id_akta . '?periode_akhir=' . $periode_akhir) ?>">
+          <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                  <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Akta Sewa</div>
+                  <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $jumlah_akta_sewa ?></div>
                 </div>
-                <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $jumlah_akta_sewa ?></div>
-              </div>
-              <div class="col-auto">
-                <i class="fas fa-file-contract fa-2x text-gray-600"></i>
+                <div class="col-auto">
+                  <i class="fas fa-file-contract fa-2x text-gray-600"></i>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </a>
+        </a>
+      <?php
+        break;
+      }
+      ?>
     </div>
 
     <!-- PBB Card Example -->
     <div class="col-xl-3 col-md-6 mb-4">
-      <a href="<?php echo base_url('data_pbb/tampil_data_pbb') ?>">
-        <div class="card border-left-info shadow h-100 py-2">
-          <div class="card-body">
-            <div class="row no-gutters align-items-center">
-              <div class="col mr-2">
-                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">PBB</div>
-                <div class="h5 mb-0 font-weight-bold text-gray-800">
+      <?php foreach ($get_id_pbb as $row) {
+        $get_id_pbb = $row->id;
+        $periode_akhir = $row->tanggal_pembayaran;
+      ?>
+        <a href="<?php echo base_url('data_pbb/tampil_data_pbb/'  . $get_id_pbb . '?periode_akhir=' . $periode_akhir) ?>">
+          <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                  <div class="text-xs font-weight-bold text-info text-uppercase mb-1">PBB</div>
+                  <div class="h5 mb-0 font-weight-bold text-gray-800">
+                  </div>
+                  <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $jumlah_pbb ?></div>
                 </div>
-                <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $jumlah_pbb ?></div>
-              </div>
-              <div class="col-auto">
-                <i class="fas fa-receipt fa-2x text-gray-600"></i>
+                <div class="col-auto">
+                  <i class="fas fa-receipt fa-2x text-gray-600"></i>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </a>
+        </a>
+      <?php
+        break;
+      }
+      ?>
     </div>
 
 

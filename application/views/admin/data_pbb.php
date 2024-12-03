@@ -136,8 +136,7 @@
 				<td><?= $sys_pbb->luas; ?></td>
 				<td>
 					<div class="action-buttons">
-						<button class="btn btn-primary" type="button" data-toggle="collapse"
-							data-target="#collapse<?= $no; ?>">Detail</button>
+						<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse<?= $no; ?>">Detail</button>
 						<?php if (!empty($get_dokumen) && isset($get_dokumen->dokumen_path)): ?>
 							<a class="btn btn-secondary" href="<?= base_url('upload/' . $get_dokumen->dokumen_path); ?>" target="_blank"><i class="fas fa-eye"></i> Lihat Dokumen</a>
 						<?php else: ?>
@@ -194,7 +193,7 @@
 
 
 			<!-- collapse -->
-			<tr id="collapse<?= $no; ?>" class="collapse">
+			<tr id="collapse<?= $no; ?>" class="collapse show">
 				<td colspan="6">
 					<div class="card">
 						<div class="card-header">
@@ -384,4 +383,45 @@
 			window.location = "../hapus_detail_pbb/" + id_detail_pbb;
 		});
 	}
+</script>
+
+<!-- Logic untuk show collapse -->
+<script>
+	$(document).ready(function() {
+		// Get current URL
+		const currentUrl = window.location.href;
+		const baseUrl = '<?= base_url('data_pbb/tampil_data_pbb') ?>';
+
+		console.log(baseUrl);
+
+		// Only execute collapse logic if NOT on data_pbb page
+		if (currentUrl !== baseUrl) {
+			// Get both path and query parameters
+			const pathSegments = window.location.pathname.split('/');
+			const id_detail_skdp = pathSegments[pathSegments.length - 1];
+			const urlParams = new URLSearchParams(window.location.search);
+			const periode_akhir = urlParams.get('periode_akhir');
+
+			if (id_detail_skdp && periode_akhir) {
+				$('tr').each(function() {
+					const row = $(this);
+					const periodeAkhirCell = row.find('td:nth-child(5)');
+
+					if (periodeAkhirCell.text().trim() === periode_akhir) {
+						const collapseId = row.find('a[data-toggle="collapse"]').attr('href');
+						if (collapseId) {
+							$(collapseId).addClass('show');
+							row.find('a[data-toggle="collapse"]').attr('aria-expanded', 'true');
+
+							$('html, body').animate({
+								scrollTop: row.offset().top - 100
+							}, 500);
+						}
+					}
+				});
+			}
+		} else {
+			$('tr.collapse.show').removeClass('show');
+		}
+	});
 </script>

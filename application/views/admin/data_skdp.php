@@ -143,7 +143,8 @@
 				<td><?= $firstDetail->periode_akhir; ?></td>
 				<td>
 					<div class="btn-group" role="group">
-						<a class="btn btn-primary" href="#collapse<?= $no; ?>" data-toggle="collapse">Detail</a>
+						<!-- Tombol Detail dengan aria-expanded="true" -->
+						<a class="btn btn-primary" href="#collapse<?= $no; ?>" data-toggle="collapse" aria-expanded="true">Detail</a>
 						<a href="previewFile?nomorskdp=<?= $firstDetail->nomor_skdp ?>" target="_blank" class="btn btn-secondary"
 							type="">
 							<i class="fas fa-eye"></i> Lihat
@@ -270,7 +271,7 @@
 			<!-- endHistoryCollapse -->
 
 			<!-- collapse -->
-			<tr id="collapse<?= $no; ?>" class="collapse">
+			<tr id="collapse<?= $no; ?>" class="collapse show">
 				<td colspan="6">
 					<div class="card">
 						<div class="card-header">
@@ -539,4 +540,52 @@
 			window.location = "../data_skdp/hapus_skdp/" + id_detail_skdp;
 		});
 	}
+</script>
+
+<!-- Logic untuk show collapse -->
+<script>
+	$(document).ready(function() {
+		// Get current URL
+		const currentUrl = window.location.href;
+		const baseUrl = '<?= base_url('data_skdp/tampil_data_skdp') ?>';
+
+		console.log(baseUrl);
+
+		// Only execute collapse logic if NOT on data_pbb page
+		if (currentUrl !== baseUrl) {
+			// Get both path and query parameters
+			const pathSegments = window.location.pathname.split('/');
+			const id_detail_skdp = pathSegments[pathSegments.length - 1];
+			const urlParams = new URLSearchParams(window.location.search);
+			const periode_akhir = urlParams.get('periode_akhir');
+
+			if (id_detail_skdp && periode_akhir) {
+				$('tr').each(function() {
+					const row = $(this);
+					const periodeAkhirCell = row.find('td:nth-child(5)');
+
+					if (periodeAkhirCell.text().trim() === periode_akhir) {
+						const collapseId = row.find('a[data-toggle="collapse"]').attr('href');
+						if (collapseId) {
+							$(collapseId).addClass('show');
+							row.find('a[data-toggle="collapse"]').attr('aria-expanded', 'true');
+
+							$('html, body').animate({
+								scrollTop: row.offset().top - 100
+							}, 500);
+						}
+					}
+				});
+			}
+		} else {
+			$('tr').each(function() {
+				const row = $(this);
+				const collapseId = row.find('a[data-toggle="collapse"]').attr('href');
+				if (collapseId) {
+					$(collapseId).removeClass('show');
+					row.find('a[data-toggle="collapse"]').attr('aria-expanded', 'false');
+				}
+			});
+		}
+	});
 </script>

@@ -10,6 +10,8 @@ class Dashboard_admin extends CI_Controller
 		$data['jumlah_akta_sewa'] = $this->db->count_all('sys_detail_akta');
 		$data['jumlah_pbb'] = $this->db->count_all('sys_detail_pbb');
 		$data['get_id_skdp'] = $this->db->where('periode_akhir <', date('Y-m-d'))->get('sys_detail_skdp')->result();
+		$data['get_id_akta'] = $this->db->where('periode_akhir <', date('Y-m-d'))->get('sys_detail_akta')->result();
+		$data['get_id_pbb'] = $this->db->where('tanggal_pembayaran <', date('Y-m-d'))->get('sys_detail_pbb')->result();
 
 		// echo json_encode($data['get_id_skdp']);
 		// die;

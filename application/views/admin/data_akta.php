@@ -101,32 +101,32 @@
 					</div>
 
 					<!-- harga sewa -->
-				<div class="form-group">
-					<label for="total_harga_sewa">Total Harga Sewa</label>
-					<input value="<?= set_value('total_harga_sewa') ?>" autocomplete="off" type="text" name="total_harga_sewa"
-						placeholder="Masukkan Total Harga Sewa" class="form-control" id="total_harga_sewa" oninput="formatRupiah(this)">
-					<?= form_error('total_harga_sewa', '<small class="text-danger">', '</small>') ?>
-				</div>
+					<div class="form-group">
+						<label for="total_harga_sewa">Total Harga Sewa</label>
+						<input value="<?= set_value('total_harga_sewa') ?>" autocomplete="off" type="text" name="total_harga_sewa"
+							placeholder="Masukkan Total Harga Sewa" class="form-control" id="total_harga_sewa" oninput="formatRupiah(this)">
+						<?= form_error('total_harga_sewa', '<small class="text-danger">', '</small>') ?>
+					</div>
 
-				<script>
-					function formatRupiah(input) {
-						let value = input.value.replace(/[^,\d]/g, '').toString();
-						let split = value.split(',');
-						let number = split[0];
-						let decimal = split[1];
-						
-						// Format number with commas
-						number = number.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-						
-						if (decimal !== undefined) {
-							input.value = number + ',' + decimal;
-						} else {
-							input.value = number;
+					<script>
+						function formatRupiah(input) {
+							let value = input.value.replace(/[^,\d]/g, '').toString();
+							let split = value.split(',');
+							let number = split[0];
+							let decimal = split[1];
+
+							// Format number with commas
+							number = number.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+							if (decimal !== undefined) {
+								input.value = number + ',' + decimal;
+							} else {
+								input.value = number;
+							}
 						}
-					}
-				</script>
+					</script>
 
-					
+
 
 				</div>
 				<div class="modal-footer">
@@ -164,8 +164,7 @@
 				<td>Rp <?= number_format((float)$this->model_data_akta->sum_harga_sewa($sys_akta->id), 0, ',', '.'); ?></td>
 				<td>
 					<div class="action-buttons">
-						<button class="btn btn-primary" type="button" data-toggle="collapse"
-							data-target="#collapse<?= $no; ?>">Detail</button>
+						<a class="btn btn-primary" href="#collapse<?= $no; ?>" data-toggle="collapse" aria-expanded="true">Detail</a>
 						<a href="<?= base_url('upload/' . $sys_akta->dokumen_path) ?>" class="btn btn-secondary" type="button">
 							<i class="fas fa-eye"></i> Lihat
 						</a>
@@ -234,7 +233,7 @@
 
 
 			<!-- collapse -->
-			<tr id="collapse<?= $no; ?>" class="collapse">
+			<tr id="collapse<?= $no; ?>" class="collapse show">
 				<td colspan="6">
 					<div class="card">
 						<div class="card-header">
@@ -278,9 +277,9 @@
 											<td>
 												<!-- delete -->
 												<div class="action-buttons">
-												<a onclick="deletedata(this)" data-id_detail_akta="<?= $detail->id_detail_akta; ?>"
-													data-toggle="tooltip" data-placement="bottom" title="Hapus"
-													class="btn btn-danger btn-sm delete text-white">Hapus</a>
+													<a onclick="deletedata(this)" data-id_detail_akta="<?= $detail->id_detail_akta; ?>"
+														data-toggle="tooltip" data-placement="bottom" title="Hapus"
+														class="btn btn-danger btn-sm delete text-white">Hapus</a>
 													<button class="btn btn-primary mr-2" type="button" data-toggle="modal"
 														data-target="#editModal<?= $detail->id_detail_akta; ?>">Ubah</button>
 													<button class="btn btn-secondary" data-toggle="modal"
@@ -307,7 +306,7 @@
 																<label for="nomor_akta">Nomor Akta</label>
 																<input value="<?= $detail->nomor_akta; ?>" autocomplete="off" type="text" name="nomor_akta"
 																	placeholder="Masukkan Nomor Akta" class="form-control">
-														 	</div>
+															</div>
 															<div class="form-group">
 																<label for="periode_awal">Periode Awal</label>
 																<input value="<?= $detail->periode_awal; ?>" autocomplete="off" type="date"
@@ -320,44 +319,44 @@
 															</div>
 															<!-- harga sewa -->
 															<div class="form-group">
-															<label for="total_harga_sewa">Harga Sewa</label>
-															<input value="<?= number_format($detail->harga_sewa, 0, ',', '.'); ?>" autocomplete="off" type="text" 
-																name="total_harga_sewa" placeholder="Masukkan Total Harga Sewa" class="form-control" 
-																id="total_harga_sewa" onkeyup="formatRupiah(this, 'Rp')">
-														</div>
+																<label for="total_harga_sewa">Harga Sewa</label>
+																<input value="<?= number_format($detail->harga_sewa, 0, ',', '.'); ?>" autocomplete="off" type="text"
+																	name="total_harga_sewa" placeholder="Masukkan Total Harga Sewa" class="form-control"
+																	id="total_harga_sewa" onkeyup="formatRupiah(this, 'Rp')">
+															</div>
 
-														<script>
-															function formatRupiah(input, prefix) {
-																// Hapus semua karakter selain angka
-																let value = input.value.replace(/[^,\d]/g, '').toString();
-																
-																// Pisahkan angka ke dalam ribuan
-																let split = value.split(',');
-																let number = split[0];
-																let decimal = split[1];
-																let sisa = number.length % 3;
-																let rupiah = number.substr(0, sisa);
-																let ribuan = number.substr(sisa).match(/\d{3}/g);
+															<script>
+																function formatRupiah(input, prefix) {
+																	// Hapus semua karakter selain angka
+																	let value = input.value.replace(/[^,\d]/g, '').toString();
 
-																// Tambahkan titik sebagai pemisah ribuan
-																if (ribuan) {
-																	let separator = sisa ? '.' : '';
-																	rupiah += separator + ribuan.join('.');
+																	// Pisahkan angka ke dalam ribuan
+																	let split = value.split(',');
+																	let number = split[0];
+																	let decimal = split[1];
+																	let sisa = number.length % 3;
+																	let rupiah = number.substr(0, sisa);
+																	let ribuan = number.substr(sisa).match(/\d{3}/g);
+
+																	// Tambahkan titik sebagai pemisah ribuan
+																	if (ribuan) {
+																		let separator = sisa ? '.' : '';
+																		rupiah += separator + ribuan.join('.');
+																	}
+
+																	// Gabungkan dengan angka desimal jika ada
+																	rupiah = decimal !== undefined ? rupiah + ',' + decimal : rupiah;
+
+																	// Tambahkan prefix "Rp" jika diperlukan
+																	input.value = prefix !== undefined ? prefix + ' ' + rupiah : rupiah;
 																}
+															</script>
 
-																// Gabungkan dengan angka desimal jika ada
-																rupiah = decimal !== undefined ? rupiah + ',' + decimal : rupiah;
 
-																// Tambahkan prefix "Rp" jika diperlukan
-																input.value = prefix !== undefined ? prefix + ' ' + rupiah : rupiah;
-															}
-														</script>
-
-													
-														<div class="modal-footer">
-															<button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-															<button type="submit" class="btn btn-primary">Simpan</button>
-														</div>
+															<div class="modal-footer">
+																<button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+																<button type="submit" class="btn btn-primary">Simpan</button>
+															</div>
 													</form>
 												</div>
 											</div>
@@ -447,7 +446,7 @@
 						});
 					}
 				}
-				
+
 			});
 		});
 	});
@@ -476,7 +475,55 @@
 			cancelButtonColor: "#d33",
 			confirmButtonText: "Ya",
 		}, function() {
-			window.location = "../data_akta/hapus_detail_akta/" +id_detail_akta;
+			window.location = "../data_akta/hapus_detail_akta/" + id_detail_akta;
 		});
 	}
+</script>
+
+<!-- Logic untuk show collapse -->
+<script>
+	$(document).ready(function() {
+		// Get current URL
+		const currentUrl = window.location.href;
+		const baseUrl = '<?= base_url('data_akta/tampil_data_akta') ?>';
+
+		console.log(baseUrl);
+
+		// Only execute collapse logic if NOT on data_pbb page
+		if (currentUrl !== baseUrl) {
+			// Get both path and query parameters
+			const pathSegments = window.location.pathname.split('/');
+			const id_detail_skdp = pathSegments[pathSegments.length - 1];
+			const urlParams = new URLSearchParams(window.location.search);
+			const periode_akhir = urlParams.get('periode_akhir');
+
+			if (id_detail_skdp && periode_akhir) {
+				$('tr').each(function() {
+					const row = $(this);
+					const periodeAkhirCell = row.find('td:nth-child(5)');
+
+					if (periodeAkhirCell.text().trim() === periode_akhir) {
+						const collapseId = row.find('a[data-toggle="collapse"]').attr('href');
+						if (collapseId) {
+							$(collapseId).addClass('show');
+							row.find('a[data-toggle="collapse"]').attr('aria-expanded', 'true');
+
+							$('html, body').animate({
+								scrollTop: row.offset().top - 100
+							}, 500);
+						}
+					}
+				});
+			}
+		} else {
+			$('tr').each(function() {
+				const row = $(this);
+				const collapseId = row.find('a[data-toggle="collapse"]').attr('href');
+				if (collapseId) {
+					$(collapseId).removeClass('show');
+					row.find('a[data-toggle="collapse"]').attr('aria-expanded', 'false');
+				}
+			});
+		}
+	});
 </script>
