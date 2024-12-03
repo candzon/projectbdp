@@ -35,22 +35,22 @@
  	});
  </script>
  <script>
- 	function logout() {
- 		$('.logout').click(function() {
-
- 			swal({
- 				title: "Anda Yakin Ingin Keluar?",
- 				type: "warning",
- 				showCancelButton: true,
- 				confirmButtonColor: "#FF0000",
- 				cancelButtonColor: "#d33",
- 				confirmButtonText: "Ya",
- 			}, function() {
- 				window.location = "../login/logout"
- 			})
- 		});
- 	}
+	function showConfirmation(className, title, windowLocation) {
+		$('.' + className).click(function() {
+			swal({
+				title: title,
+				type: "warning",
+				showCancelButton: true,
+				confirmButtonColor: "#FF0000",
+				cancelButtonColor: "#d33",
+				confirmButtonText: "Ya",
+			}, function() {
+				window.location = windowLocation;
+			});
+		});
+	}
  </script>
+ 
  </body>
 
  </html>

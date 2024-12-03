@@ -120,6 +120,13 @@
 		<?php $no = 1;
 		foreach ($data as $sys_pbb):
 			$details = $this->model_data_pbb->get_detail_pbb($sys_pbb->id);
+
+			$get_dokumen = $this->db->select('dokumen_path')
+				->order_by('dokumen_uploaded_at', 'DESC')
+				->where('id_pbb', $sys_pbb->id)
+				->get('sys_detail_pbb')
+				->row();
+
 		?>
 			<tr align="center">
 				<td><?= $no; ?></td>
@@ -131,6 +138,11 @@
 					<div class="action-buttons">
 						<button class="btn btn-primary" type="button" data-toggle="collapse"
 							data-target="#collapse<?= $no; ?>">Detail</button>
+						<?php if (!empty($get_dokumen) && isset($get_dokumen->dokumen_path)): ?>
+							<a class="btn btn-secondary" href="<?= base_url('upload/' . $get_dokumen->dokumen_path); ?>" target="_blank"><i class="fas fa-eye"></i> Lihat Dokumen</a>
+						<?php else: ?>
+							<a class="btn btn-secondary" href="javascript:void(0);" title="Data kosong"><i class="fas fa-eye"></i> Lihat Dokumen</a>
+						<?php endif; ?>
 						<!-- history -->
 						<button class="btn btn-primary" type="button" data-toggle="collapse"
 							data-target="#collapseHistory<?= $no; ?>">History</button>
@@ -165,7 +177,7 @@
 										<tr align="center">
 											<td><?= $detail_no; ?></td>
 											<td><?= $detail->tahun; ?></td>
-											<td><?= $detail->jumlah_pembayaran; ?></td>
+											<td>Rp <?= number_format((float)$detail->jumlah_pembayaran, 0, ',', '.'); ?></td>
 											<td><?= $detail->tanggal_pembayaran; ?></td>
 											<td><?= $detail->deleted_at; ?></td>
 											<td><?= $detail->deleted_by_user; ?></td>
@@ -196,6 +208,8 @@
 										<th>Tahun</th>
 										<th>Jumlah Pembayaran</th>
 										<th>Tanggal Pembayaran</th>
+										<th>Dokumen</th>
+										<th>Tgl Upload Dok</th>
 										<th>Aksi</th>
 									</tr>
 								</thead>
@@ -207,15 +221,54 @@
 										<tr align="center">
 											<td><?= $detail_no; ?></td>
 											<td><?= $detail->tahun; ?></td>
-											<td><?= $detail->jumlah_pembayaran; ?></td>
+											<td>Rp <?= number_format((float)$detail->jumlah_pembayaran, 0, ',', '.'); ?></td>
 											<td><?= $detail->tanggal_pembayaran; ?></td>
+											<td>
+												<?php if (!empty($detail->dokumen_path)): ?>
+													<a href="<?= base_url('upload/' . $detail->dokumen_path); ?>" target="_blank">Lihat Dokumen</a>
+												<?php else: ?>
+													<span>-</span>
+												<?php endif; ?>
+											</td>
+											<td>
+												<?= !is_null($detail->dokumen_uploaded_at) ? date('d F Y H:i:s', strtotime($detail->dokumen_uploaded_at)) : '-' ?>
+											</td>
+
 											<td>
 												<!-- delete -->
 												<div class="action-buttons">
-													<a href="<?= base_url('data_pbb/hapus_detail_pbb/' . $detail->id) ?>" class="btn btn-danger mr-2"
-														onclick="return confirm('Yakin ingin menghapus data ini?')">Hapus</a>
+													<a class="btn btn-danger mr-2" data-id_detail_pbb="<?= $detail->id; ?>" href="javascript:void(0);" onclick="deletedata(this)">Hapus</a>
 													<button class="btn btn-primary mr-2" type="button" data-toggle="modal"
 														data-target="#editModal<?= $detail->id; ?>">Ubah</button>
+													<!-- Button Upload Dokumen -->
+													<a class="btn btn-secondary" href="" data-toggle="modal" data-target="#uploadModal<?= $detail->id; ?>"><i class="fas fa-upload"></i> Upload Dokumen</a>
+													<!-- modal upload -->
+													<div class="modal fade" id="uploadModal<?= $detail->id; ?>" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel" aria-hidden="true">
+														<div class="modal-dialog" role="document">
+															<div class="modal-content">
+																<div class="modal-header">
+																	<h5 class="modal-title" id="uploadModalLabel">Upload Dokumen PBB</h5>
+																	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																		<span aria-hidden="true">&times;</span>
+																	</button>
+																</div>
+																<!-- Isi Form Upload -->
+																<form action="<?= base_url('data_pbb/upload_dokumen/') ?>" method="post" enctype="multipart/form-data">
+																	<input type="hidden" name="id" value="<?= $detail->id ?>">
+																	<div class="modal-body">
+																		<div class="form-group">
+																			<label for="dokumen">Dokumen (PDF, DOC, DOCX)</label>
+																			<input type="file" class="form-control" id="dokumen" name="dokumen" accept=".pdf, .doc, .docx">
+																		</div>
+																	</div>
+																	<div class="modal-footer">
+																		<button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+																		<button type="submit" class="btn btn-primary">Upload</button>
+																	</div>
+																</form>
+															</div>
+														</div>
+													</div>
 												</div>
 											</td>
 										</tr>
@@ -321,14 +374,14 @@
 		var id_detail_pbb = $(element).data('id_detail_pbb');
 		// alert(id_detail_pbb);
 		swal({
-			title: "Hapus Data?",
+			title: "Yakin ingin Hapus Data?",
 			type: "warning",
 			showCancelButton: true,
 			confirmButtonColor: "#FF0000",
 			cancelButtonColor: "#d33",
 			confirmButtonText: "Ya",
 		}, function() {
-			window.location = "../data_pbb/hapus_pbb/" + id_detail_pbb;
+			window.location = "../hapus_detail_pbb/" + id_detail_pbb;
 		});
 	}
 </script>

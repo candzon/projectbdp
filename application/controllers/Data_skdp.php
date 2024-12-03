@@ -10,9 +10,12 @@ class Data_skdp extends CI_Controller
 
 	public function tampil_data_skdp()
 	{
+		$periode_akhir = $this->input->get('periode_akhir');
 		$data['data'] = $this->model_data_skdp->tampil_data();
 		$data['alamat'] = $this->model_data_skdp->getAlamatAndKantor();
 		$data['getHeadKantor'] = $this->model_data_skdp->getHeadKantor();
+		$data['get_id_skdp'] = $this->db->where('periode_akhir <', date('Y-m-d'))->get('sys_detail_skdp')->result();
+		$data['periode_akhir'] = $periode_akhir;
 
 		$this->load->view('templates_admin/header');
 		$this->load->view('templates_admin/sidebar');

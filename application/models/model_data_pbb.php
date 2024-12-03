@@ -87,4 +87,16 @@ class Model_data_pbb extends CI_Model
 		$this->db->where($where);
 		$this->db->update('sys_detail_pbb', $data);
 	}
+
+	public function upload_dokumen($id, $data)
+	{
+		$this->db->where('id', $id);
+		$this->db->update('sys_detail_pbb', $data);
+
+		if ($this->db->affected_rows() > 0) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+	}
 }

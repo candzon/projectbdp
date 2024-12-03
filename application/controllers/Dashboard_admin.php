@@ -1,12 +1,18 @@
 <?php
 class Dashboard_admin extends CI_Controller
 {
-
 	public function index()
 	{
 
 		$data['jumlah_akun'] = $this->model_data_akun->jumlah_akun();
 		$data['jumlah_masa_sewa'] = $this->model_data_masa_sewa->jumlah_masa_sewa();
+		$data['jumlah_skdp'] = $this->db->count_all('sys_detail_skdp');
+		$data['jumlah_akta_sewa'] = $this->db->count_all('sys_detail_akta');
+		$data['jumlah_pbb'] = $this->db->count_all('sys_detail_pbb');
+		$data['get_id_skdp'] = $this->db->where('periode_akhir <', date('Y-m-d'))->get('sys_detail_skdp')->result();
+
+		// echo json_encode($data['get_id_skdp']);
+		// die;
 
 		$this->load->view('templates_admin/header');
 		$this->load->view('templates_admin/sidebar');

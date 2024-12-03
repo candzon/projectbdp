@@ -161,7 +161,7 @@
 
 			<!-- Nav Item - Dashboard -->
 			<li class="nav-item">
-				<a class="nav-link nav-link logout w3-hover-opacity" style="width:100%;cursor:pointer" onclick="logout()">
+				<a class="nav-link nav-link logout w3-hover-opacity" style="width:100%;cursor:pointer" onclick="showConfirmation('logout', 'Anda Yakin ingin Keluar ?', '../login/logout')">
 					<i class="fas fa-fw fa-door-open"></i>
 					<span>Keluar</span></a>
 			</li>

@@ -143,8 +143,7 @@
 				<td><?= $firstDetail->periode_akhir; ?></td>
 				<td>
 					<div class="btn-group" role="group">
-						<button class="btn btn-primary" type="button" data-toggle="collapse"
-							data-target="#collapse<?= $no; ?>">Detail</button>
+						<a class="btn btn-primary" href="#collapse<?= $no; ?>" data-toggle="collapse">Detail</a>
 						<a href="previewFile?nomorskdp=<?= $firstDetail->nomor_skdp ?>" target="_blank" class="btn btn-secondary"
 							type="">
 							<i class="fas fa-eye"></i> Lihat
@@ -252,7 +251,7 @@
 												<?php endif; ?>
 
 											</td>
-											<td><?= $detail->dokumen_uploaded_at; ?></td>
+											<td><?= !is_null($detail->dokumen_uploaded_at) ? date('d F Y H:i:s', strtotime($detail->dokumen_uploaded_at)) : '-' ?></td>
 											<td><?= $detail->keterangan; ?></td>
 											<td style="word-wrap:break-word;">
 												<?= date('d-m-Y', strtotime($detail->deleted_at)) . "<br/>" . date('H:i:s', strtotime($detail->deleted_at)); ?>
@@ -317,7 +316,7 @@
 												<?php endif; ?>
 
 											</td>
-											<td><?= $detail->dokumen_uploaded_at; ?></td>
+											<td><?= !is_null($detail->dokumen_uploaded_at) ? date('d F Y H:i:s', strtotime($detail->dokumen_uploaded_at)) : '-' ?></td>
 											<td><?= $detail->keterangan; ?></td>
 											<td>
 												<a onclick="deletedata(this)" data-id_detail_skdp="<?= $detail->id_detail_skdp; ?>"

@@ -161,7 +161,7 @@
 				<td><?= $sys_akta->nama_kantor; ?></td>
 				<td><?= $sys_akta->alamat; ?></td>
 				<td><?= $sys_akta->periode_akhir_sewa; ?></td>
-				<td><?= $this->model_data_akta->sum_harga_sewa($sys_akta->id); ?></td>
+				<td>Rp <?= number_format((float)$this->model_data_akta->sum_harga_sewa($sys_akta->id), 0, ',', '.'); ?></td>
 				<td>
 					<div class="action-buttons">
 						<button class="btn btn-primary" type="button" data-toggle="collapse"
@@ -245,14 +245,12 @@
 								<thead>
 									<tr align="center">
 										<th>No</th>
-										<th>Nomor akta</th>
+										<th>Nomor Akta</th>
 										<th>Alamat Kantor</th>
-										<th>Pemiliki Tempat</th>
-										<th>Tanggal Akta </th>
+										<th>Nama Kepala Kantor</th>
 										<th>Periode Awal</th>
 										<th>Periode Akhir</th>
-										<th>Masa Sewa akhir</th>
-										<th>Total Harga Sewa</th>
+										<th>Harga Sewa</th>
 										<th>Dokumen</th>
 										<th>Aksi</th>
 									</tr>
@@ -269,7 +267,7 @@
 											<td><?= $detail->nama_kepala_kantor; ?></td>
 											<td><?= $detail->periode_awal ?? "-"; ?></td>
 											<td><?= $detail->periode_akhir; ?></td>
-											<td><?= $detail->harga_sewa; ?></td>
+											<td>Rp <?= number_format((float)$detail->harga_sewa, 0, ',', '.'); ?></td>
 											<td>
 												<?php if ($detail->dokumen_path) : ?>
 													<a href="<?= base_url('upload/' . $detail->dokumen_path) ?>" target="_blank">Lihat Dokumen</a>
