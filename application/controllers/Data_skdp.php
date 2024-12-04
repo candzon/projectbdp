@@ -12,13 +12,21 @@ class Data_skdp extends CI_Controller
 	{
 		$periode_akhir = $this->input->get('periode_akhir');
 		$data['data'] = $this->model_data_skdp->tampil_data();
+
+		// var_dump($data['data']); die;
 		$data['alamat'] = $this->model_data_skdp->getAlamatAndKantor();
 		$data['getHeadKantor'] = $this->model_data_skdp->getHeadKantor();
-		$data['get_id_skdp'] = $this->db->where('periode_akhir <', date('Y-m-d'))->get('sys_detail_skdp')->result();
+		$data['get_id_skdp'] = $this->db->select('a.*, b.*')
+			->from('sys_detail_skdp a')
+			->join('sys_alamat b', 'a.nama_kantor = b.nama_kantor')
+			->where('a.periode_akhir <', date('Y-m-d'))
+			->get()
+			->result();
+
 		$data['periode_akhir'] = $periode_akhir;
 
 		$this->load->view('templates_admin/header');
-		$this->load->view('templates_admin/sidebar');
+		$this->load->view('templates_admin/sidebar', $data);
 		$this->load->view('admin/data_skdp', $data);
 		$this->load->view('templates_admin/footer');
 	}

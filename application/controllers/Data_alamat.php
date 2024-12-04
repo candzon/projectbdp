@@ -10,9 +10,13 @@
         }
 
         public function tambah_alamat(){
+            $query = $this->db->select_max('collapse_id')->get('sys_alamat');
+            $last_collapse_id = $query->row()->collapse_id;
+            $collapse_id = $last_collapse_id + 1;
+
             $this->load->view('templates_admin/header');
             $this->load->view('templates_admin/sidebar');
-            $this->load->view('admin/tambah_alamat');
+            $this->load->view('admin/tambah_alamat', ['collapse_id' => $collapse_id]);
             $this->load->view('templates_admin/footer');
         }
 
@@ -26,6 +30,7 @@
             
             $nama_kantor = $this->input->post('nama_kantor');
             $alamat = $this->input->post('alamat');
+            $collapse_id = $this->input->post('collapse_id');
            
             
             if($this->form_validation->run()==FALSE){
@@ -33,7 +38,8 @@
             }else{
                 $data = array(
                     'nama_kantor' =>$nama_kantor,
-                    'alamat' =>$alamat
+                    'alamat' =>$alamat,
+                    'collapse_id' =>$collapse_id
                 );
                 $this->model_data_alamat->tambah_alamat($data, 'sys_alamat');
                 $this->session->set_flashdata('message','<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Berhasil!</strong> Menambah Data Pakar<button type="button" class="close" data-dismiss="alert" aria-label="Close">

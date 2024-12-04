@@ -2,12 +2,13 @@
 class Model_data_skdp extends CI_Model
 {
 
-	public function tampil_data()
+	public function tampil_data($collapse_id = null)
 	{
 		// $result = $this->db->query("SELECT * FROM sys_detail_skdp  ORDER BY id_detail_skdp DESC ");
-		$this->db->select('sys_detail_skdp.*, sys_akun.nama AS deleted_by_user')
-			->from('sys_detail_skdp')
-			->join('sys_akun', 'sys_akun.id = sys_detail_skdp.deleted_by', 'left')
+		$this->db->select('a.*, b.nama AS deleted_by_user, c.*')
+			->from('sys_detail_skdp a')
+			->join('sys_akun b', 'b.id = a.deleted_by', 'left')
+			->join('sys_alamat c', 'c.nama_kantor = a.nama_kantor')
 			->order_by('id_detail_skdp', 'DESC');
 		return $this->db->get()->result();
 	}

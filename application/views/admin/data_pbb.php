@@ -86,8 +86,46 @@
 						</div>
 						<div class="form-group">
 							<label for="jumlah_pembayaran">Jumlah Pembayaran</label>
-							<input type="text" class="form-control" id="jumlah_pembayaran" name="jumlah_pembayaran">
+							<div style="position:relative;">
+								<input type="text"
+									name="jumlah_pembayaran" 
+									placeholder="Masukkan Jumlah Pembayaran"
+									class="form-control rupiah-input"
+									id="jumlah_pembayaran"
+									data-id="new">
+								<div id="bayarPreview_new"
+									class="bayar-preview"
+									style="display:none; position:absolute; top:100%; left:0; background:#fff; padding:5px; border:1px solid #ccc; border-radius:3px; margin-top:5px; z-index:1000;">
+								</div>
+								<input type="hidden" name="jumlah_pembayaran_raw" id="jumlah_pembayaran_raw_new">
+							</div>
 						</div>
+
+						<script>
+							document.querySelector('#jumlah_pembayaran').addEventListener('input', function(e) {
+								let value = this.value.replace(/[^\d]/g, '');
+								let id = this.getAttribute('data-id');
+
+								if (value !== '') {
+									document.getElementById('jumlah_pembayaran_raw_' + id).value = value;
+									let formatted = new Intl.NumberFormat('id-ID').format(value);
+									this.value = formatted;
+
+									let preview = document.getElementById('bayarPreview_' + id);
+									preview.innerHTML = 'Rp ' + formatted;
+									preview.style.display = 'block';
+								} else {
+									document.getElementById('jumlah_pembayaran_raw_' + id).value = '';
+									document.getElementById('bayarPreview_' + id).style.display = 'none';
+								}
+							});
+
+							document.addEventListener('click', function(e) {
+								if (!e.target.classList.contains('rupiah-input')) {
+									document.getElementById('bayarPreview_new').style.display = 'none';
+								}
+							});
+						</script>
 						<div class="form-group">
 							<label for="tanggal_pembayaran">Tanggal Pembayaran</label>
 							<input type="date" class="form-control" id="tanggal_pembayaran" name="tanggal_pembayaran">
@@ -291,11 +329,55 @@
 																<input type="text" class="form-control" id="tahun" name="tahun"
 																	value="<?= $detail->tahun; ?>">
 															</div>
+															<!-- jumlah pembayaran -->
 															<div class="form-group">
-																<label for="jumlah_pembayaran">Jumlah Pembayaran</label>
-																<input type="text" class="form-control" id="jumlah_pembayaran" name="jumlah_pembayaran"
-																	value="<?= $detail->jumlah_pembayaran; ?>">
+																<label for="jumlah_pembayaran_<?= $detail->id ?>">Jumlah Pembayaran</label>
+																<div style="position:relative;">
+																	<input value="<?= number_format($detail->jumlah_pembayaran, 0, ',', '.') ?>"
+																		autocomplete="off"
+																		type="text" 
+																		name="jumlah_pembayaran"
+																		placeholder="Masukkan Jumlah Pembayaran"
+																		class="form-control rupiah-input"
+																		id="jumlah_pembayaran_<?= $detail->id ?>"
+																		data-id="<?= $detail->id ?>">
+																	<div id="bayarPreview_<?= $detail->id ?>"
+																		class="bayar-preview"
+																		style="display:none; position:absolute; top:100%; left:0; background:#fff; padding:5px; border:1px solid #ccc; border-radius:3px; margin-top:5px; z-index:1000;">
+																	</div>
+																	<input type="hidden" name="jumlah_pembayaran_raw" id="jumlah_pembayaran_raw_<?= $detail->id ?>">
+																</div>
 															</div>
+
+															<script>
+															document.querySelectorAll('.rupiah-input').forEach(input => {
+																input.addEventListener('input', function(e) {
+																	let value = this.value.replace(/[^\d]/g, '');
+																	let id = this.getAttribute('data-id');
+
+																	if (value !== '') {
+																		document.getElementById('jumlah_pembayaran_raw_' + id).value = value;
+																		let formatted = new Intl.NumberFormat('id-ID').format(value);
+																		this.value = formatted;
+
+																		let preview = document.getElementById('bayarPreview_' + id);
+																		preview.innerHTML = 'Rp ' + formatted;
+																		preview.style.display = 'block';
+																	} else {
+																		document.getElementById('jumlah_pembayaran_raw_' + id).value = '';
+																		document.getElementById('bayarPreview_' + id).style.display = 'none';
+																	}
+																});
+															});
+
+															document.addEventListener('click', function(e) {
+																if (!e.target.classList.contains('rupiah-input')) {
+																	document.querySelectorAll('.bayar-preview').forEach(el => {
+																		el.style.display = 'none';
+																	});
+																}
+															});
+															</script>
 															<div class="form-group">
 																<label for="tanggal_pembayaran">Tanggal Pembayaran</label>
 																<input type="date" class="form-control" id="tanggal_pembayaran" name="tanggal_pembayaran"
@@ -380,7 +462,7 @@
 			cancelButtonColor: "#d33",
 			confirmButtonText: "Ya",
 		}, function() {
-			window.location = "../hapus_detail_pbb/" + id_detail_pbb;
+			window.location = "../data_pbb/hapus_detail_pbb/" + id_detail_pbb;
 		});
 	}
 </script>

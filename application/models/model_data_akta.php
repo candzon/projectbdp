@@ -10,10 +10,21 @@ class Model_data_akta extends CI_Model
 
 	public function get_detail_akta($id)
 	{
-		$this->db->select('*, sys_akun.nama AS deleted_by_user');
+		$this->db->select('*, sys_akun.nama AS deleted_by_user, c.*');
 		$this->db->from('sys_detail_akta');
 		$this->db->join('sys_akun', 'sys_akun.id = sys_detail_akta.deleted_by', 'left');
+		$this->db->join('sys_alamat c', 'c.nama_kantor = sys_detail_akta.nama_kantor');
 		$this->db->where('id_akta', $id);
+		$this->db->order_by('id_detail_akta', 'DESC');
+		return $this->db->get()->result();
+	}
+
+	public function get_collapse()
+	{
+		$this->db->select('*, sys_akun.nama AS deleted_by_user, c.*');
+		$this->db->from('sys_detail_akta');
+		$this->db->join('sys_akun', 'sys_akun.id = sys_detail_akta.deleted_by', 'left');
+		$this->db->join('sys_alamat c', 'c.nama_kantor = sys_detail_akta.nama_kantor');
 		$this->db->order_by('id_detail_akta', 'DESC');
 		return $this->db->get()->result();
 	}

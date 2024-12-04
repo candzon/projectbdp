@@ -123,6 +123,10 @@
 		// Kelompokkan data berdasarkan nama kantor
 		foreach ($data as $detail_skdp) {
 			$groupedData[$detail_skdp->nama_kantor][] = $detail_skdp;
+			// echo "<pre>";
+			// var_dump($groupedData);
+			// echo "</pre>";
+			// die;
 		}
 		// Loop untuk menampilkan data yang sudah dikelompokkan
 		foreach ($groupedData as $nama_kantor => $details):
@@ -144,16 +148,16 @@
 				<td>
 					<div class="btn-group" role="group">
 						<!-- Tombol Detail dengan aria-expanded="true" -->
-						<a class="btn btn-primary" href="#collapse<?= $no; ?>" data-toggle="collapse" aria-expanded="true">Detail</a>
+						<a class="btn btn-primary" href="#collapse<?= $firstDetail->collapse_id ?>" data-toggle="collapse" aria-expanded="true" onclick="reloadWithCollapse('<?= $firstDetail->collapse_id ?>')">Detail</a>
 						<a href="previewFile?nomorskdp=<?= $firstDetail->nomor_skdp ?>" target="_blank" class="btn btn-secondary"
 							type="">
 							<i class="fas fa-eye"></i> Lihat
 						</a>
 
 						<!-- Button History -->
-						<button type="button" class="btn btn-primary" data-toggle="collapse"
-							data-target="#historyCollapse<?= $no; ?>">
-							History </button>
+						<a class="btn btn-primary" data-toggle="collapse"
+							href="#historyCollapse<?= $firstDetail->collapse_id ?>">
+							History </a>
 
 						<!-- Modal History -->
 						<div class="modal fade" id="historyModal" tabindex="-1" role="dialog" aria-labelledby="historyModalLabel"
@@ -205,7 +209,7 @@
 			</tr>
 
 			<!-- historyCollapse -->
-			<tr id="historyCollapse<?= $no ?>" class="collapse">
+			<tr id="historyCollapse<?= $firstDetail->collapse_id ?>" class="collapse">
 				<td colspan="6">
 					<div class="card">
 						<div class="card-header">
@@ -271,7 +275,7 @@
 			<!-- endHistoryCollapse -->
 
 			<!-- collapse -->
-			<tr id="collapse<?= $no; ?>" class="collapse show">
+			<tr id="collapse<?= $firstDetail->collapse_id ?>" class="collapse show">
 				<td colspan="6">
 					<div class="card">
 						<div class="card-header">
@@ -545,47 +549,89 @@
 <!-- Logic untuk show collapse -->
 <script>
 	$(document).ready(function() {
-		// Get current URL
-		const currentUrl = window.location.href;
-		const baseUrl = '<?= base_url('data_skdp/tampil_data_skdp') ?>';
+		// Hide all collapses initially
+		$('.collapse').removeClass('show');
+		$('a[data-toggle="collapse"]').attr('aria-expanded', 'false');
 
-		console.log(baseUrl);
+		// Get URL components
+		const urlParams = new URLSearchParams(window.location.search);
+		const periode_akhir = urlParams.get('periode_akhir');
+		const urlHash = window.location.hash;
+		const pathSegments = window.location.pathname.split('/');
+		const id_detail_skdp = pathSegments[pathSegments.length - 1];
 
-		// Only execute collapse logic if NOT on data_pbb page
-		if (currentUrl !== baseUrl) {
-			// Get both path and query parameters
-			const pathSegments = window.location.pathname.split('/');
-			const id_detail_skdp = pathSegments[pathSegments.length - 1];
-			const urlParams = new URLSearchParams(window.location.search);
-			const periode_akhir = urlParams.get('periode_akhir');
+		// Check if we have specific parameters (id and periode_akhir)
+		if (isNumeric(id_detail_skdp) && periode_akhir && urlHash) {
+			// Handle specific collapse with parameters
+			const targetCollapseId = urlHash.replace('#', '');
+			const targetCollapse = $(`#${targetCollapseId}`);
 
-			if (id_detail_skdp && periode_akhir) {
+			if (targetCollapse.length) {
+				// Hide all other collapses
+				$('.collapse').not(`#${targetCollapseId}`).removeClass('show');
+				$('a[data-toggle="collapse"]').attr('aria-expanded', 'false');
+
+				// Show target collapse
+				targetCollapse.addClass('show');
+				$(`a[href="#${targetCollapseId}"]`).attr('aria-expanded', 'true');
+
+				// Find and scroll to matching row
 				$('tr').each(function() {
 					const row = $(this);
-					const periodeAkhirCell = row.find('td:nth-child(5)');
+					const periodeCell = row.find('td:nth-child(5)');
 
-					if (periodeAkhirCell.text().trim() === periode_akhir) {
-						const collapseId = row.find('a[data-toggle="collapse"]').attr('href');
-						if (collapseId) {
-							$(collapseId).addClass('show');
-							row.find('a[data-toggle="collapse"]').attr('aria-expanded', 'true');
-
+					if (periodeCell.text().trim() === periode_akhir) {
+						setTimeout(() => {
 							$('html, body').animate({
 								scrollTop: row.offset().top - 100
 							}, 500);
-						}
+						}, 100);
+						return false;
 					}
 				});
 			}
-		} else {
-			$('tr').each(function() {
-				const row = $(this);
-				const collapseId = row.find('a[data-toggle="collapse"]').attr('href');
-				if (collapseId) {
-					$(collapseId).removeClass('show');
-					row.find('a[data-toggle="collapse"]').attr('aria-expanded', 'false');
-				}
-			});
+		} else if (urlHash) {
+			// Handle general collapse (only hash in URL)
+			const targetCollapseId = urlHash.replace('#', '');
+			const targetCollapse = $(`#${targetCollapseId}`);
+
+			if (targetCollapse.length) {
+				targetCollapse.addClass('show');
+				$(`a[href="#${targetCollapseId}"]`).attr('aria-expanded', 'true');
+
+				setTimeout(() => {
+					$('html, body').animate({
+						scrollTop: targetCollapse.offset().top - 100
+					}, 500);
+				}, 100);
+			}
+		}
+
+		// Handle collapse toggle clicks
+		$('a[data-toggle="collapse"]').on('click', function(e) {
+			const targetId = $(this).attr('href');
+			$(targetId).toggleClass('show');
+			$(this).attr('aria-expanded', $(targetId).hasClass('show'));
+		});
+
+		// Helper function to check if string is numeric
+		function isNumeric(str) {
+			return !isNaN(str) && !isNaN(parseFloat(str));
 		}
 	});
+
+	function reloadWithCollapse(collapseId) {
+		// Get current URL
+		let currentUrl = window.location.href;
+
+		// Remove any existing hash
+		currentUrl = currentUrl.split('#')[0];
+
+		// Add the new hash
+		let newUrl = currentUrl + '#collapse' + collapseId;
+
+		// Force reload with new URL
+		window.location.replace(newUrl);
+		location.reload(true);
+	}
 </script>

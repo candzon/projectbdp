@@ -111,7 +111,7 @@ class Data_pbb extends CI_Controller
 			$id_pbb = $this->input->post('id_pbb');
 			$data = [
 				'tahun' => $this->input->post('tahun'),
-				'jumlah_pembayaran' => $this->input->post('jumlah_pembayaran'),
+				'jumlah_pembayaran' => $this->input->post('jumlah_pembayaran_raw'),
 				'tanggal_pembayaran' => $this->input->post('tanggal_pembayaran'),
 			];
 			$this->model_data_pbb->tambah_detail_pbb($id_pbb, $data);
@@ -133,7 +133,7 @@ class Data_pbb extends CI_Controller
 		$id = $this->input->post('id');
 		$data = [
 			'tahun' => $this->input->post('tahun'),
-			'jumlah_pembayaran' => $this->input->post('jumlah_pembayaran'),
+			'jumlah_pembayaran' => $this->input->post('jumlah_pembayaran_raw'),
 			'tanggal_pembayaran' => $this->input->post('tanggal_pembayaran'),
 		];
 		$result = $this->model_data_pbb->edit_detail_pbb($id, $data);

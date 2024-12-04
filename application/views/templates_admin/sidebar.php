@@ -108,6 +108,13 @@
 
 			<!-- Nav Item - Pages Collapse Menu -->
 			<li
+				<?php
+				$alamat_collapse = $this->db->select('collapse_id')
+					->from('sys_alamat')
+					->order_by('collapse_id', 'ASC')
+					->get()
+					->row();
+				?>
 				<?= $this->uri->segment(2) == 'tampil_data_skdp' || $this->uri->segment(1) == 'data_skdp' || $this->uri->segment(2) == 'tampil_data_vendor' || $this->uri->segment(1) == 'data_vendor' || $this->uri->segment(2) == 'tampil_data_karyawan' || $this->uri->segment(1) == 'data_karyawan' || $this->uri->segment(2) == 'tampil_alamat' || $this->uri->segment(1) == 'data_alamat' ? 'class="nav-item active"' : 'class="nav-item"' ?>>
 				<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true"
 					aria-controls="collapseTwo">

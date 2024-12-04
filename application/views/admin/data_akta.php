@@ -102,28 +102,46 @@
 
 					<!-- harga sewa -->
 					<div class="form-group">
-						<label for="total_harga_sewa">Total Harga Sewa</label>
-						<input value="<?= set_value('total_harga_sewa') ?>" autocomplete="off" type="text" name="total_harga_sewa"
-							placeholder="Masukkan Total Harga Sewa" class="form-control" id="total_harga_sewa" oninput="formatRupiah(this)">
-						<?= form_error('total_harga_sewa', '<small class="text-danger">', '</small>') ?>
+						<label for="total_harga_sewa">Harga Sewa</label>
+						<div style="position:relative;">
+							<input type="text"
+								name="total_harga_sewa"
+								placeholder="Masukkan Harga Sewa"
+								class="form-control rupiah-input"
+								id="total_harga_sewa"
+								data-id="new">
+							<div id="hargaPreview_new"
+								class="harga-preview"
+								style="display:none; position:absolute; top:100%; left:0; background:#fff; padding:5px; border:1px solid #ccc; border-radius:3px; margin-top:5px; z-index:1000;">
+							</div>
+							<input type="hidden" name="total_harga_sewa_raw" id="total_harga_sewa_raw_new">
+						</div>
 					</div>
 
 					<script>
-						function formatRupiah(input) {
-							let value = input.value.replace(/[^,\d]/g, '').toString();
-							let split = value.split(',');
-							let number = split[0];
-							let decimal = split[1];
+						document.querySelector('#total_harga_sewa').addEventListener('input', function(e) {
+							let value = this.value.replace(/[^\d]/g, '');
+							let id = this.getAttribute('data-id');
 
-							// Format number with commas
-							number = number.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+							if (value !== '') {
+								document.getElementById('total_harga_sewa_raw_' + id).value = value;
+								let formatted = new Intl.NumberFormat('id-ID').format(value);
+								this.value = formatted;
 
-							if (decimal !== undefined) {
-								input.value = number + ',' + decimal;
+								let preview = document.getElementById('hargaPreview_' + id);
+								preview.innerHTML = 'Rp ' + formatted;
+								preview.style.display = 'block';
 							} else {
-								input.value = number;
+								document.getElementById('total_harga_sewa_raw_' + id).value = '';
+								document.getElementById('hargaPreview_' + id).style.display = 'none';
 							}
-						}
+						});
+
+						document.addEventListener('click', function(e) {
+							if (!e.target.classList.contains('rupiah-input')) {
+								document.getElementById('hargaPreview_new').style.display = 'none';
+							}
+						});
 					</script>
 
 
@@ -319,37 +337,56 @@
 															</div>
 															<!-- harga sewa -->
 															<div class="form-group">
-																<label for="total_harga_sewa">Harga Sewa</label>
-																<input value="<?= number_format($detail->harga_sewa, 0, ',', '.'); ?>" autocomplete="off" type="text"
-																	name="total_harga_sewa" placeholder="Masukkan Total Harga Sewa" class="form-control"
-																	id="total_harga_sewa" onkeyup="formatRupiah(this, 'Rp')">
+																<label for="total_harga_sewa_<?= $detail->id_detail_akta ?>">Harga Sewa</label>
+																<div style="position:relative;">
+																	<input value="<?= number_format($detail->harga_sewa, 0, ',', '.') ?>"
+																		autocomplete="off"
+																		type="text"
+																		name="total_harga_sewa"
+																		placeholder="Masukkan Total Harga Sewa"
+																		class="form-control rupiah-input"
+																		id="total_harga_sewa_<?= $detail->id_detail_akta ?>"
+																		data-id="<?= $detail->id_detail_akta ?>">
+																	<div id="hargaPreview_<?= $detail->id_detail_akta ?>"
+																		class="harga-preview"
+																		style="display:none; position:absolute; top:100%; left:0; background:#fff; padding:5px; border:1px solid #ccc; border-radius:3px; margin-top:5px; z-index:1000;">
+																	</div>
+																	<!-- Hidden input untuk menyimpan nilai tanpa format -->
+																	<input type="hidden" name="total_harga_sewa_raw" id="total_harga_sewa_raw_<?= $detail->id_detail_akta ?>">
+																</div>
 															</div>
 
 															<script>
-																function formatRupiah(input, prefix) {
-																	// Hapus semua karakter selain angka
-																	let value = input.value.replace(/[^,\d]/g, '').toString();
+																document.querySelectorAll('.rupiah-input').forEach(input => {
+																	input.addEventListener('input', function(e) {
+																		let value = this.value.replace(/[^\d]/g, '');
+																		let id = this.getAttribute('data-id');
 
-																	// Pisahkan angka ke dalam ribuan
-																	let split = value.split(',');
-																	let number = split[0];
-																	let decimal = split[1];
-																	let sisa = number.length % 3;
-																	let rupiah = number.substr(0, sisa);
-																	let ribuan = number.substr(sisa).match(/\d{3}/g);
+																		if (value !== '') {
+																			// Simpan nilai asli ke hidden input
+																			document.getElementById('total_harga_sewa_raw_' + id).value = value;
 
-																	// Tambahkan titik sebagai pemisah ribuan
-																	if (ribuan) {
-																		let separator = sisa ? '.' : '';
-																		rupiah += separator + ribuan.join('.');
+																			// Format untuk tampilan
+																			let formatted = new Intl.NumberFormat('id-ID').format(value);
+																			this.value = formatted;
+
+																			let preview = document.getElementById('hargaPreview_' + id);
+																			preview.innerHTML = 'Rp ' + formatted;
+																			preview.style.display = 'block';
+																		} else {
+																			document.getElementById('total_harga_sewa_raw_' + id).value = '';
+																			document.getElementById('hargaPreview_' + id).style.display = 'none';
+																		}
+																	});
+																});
+
+																document.addEventListener('click', function(e) {
+																	if (!e.target.classList.contains('rupiah-input')) {
+																		document.querySelectorAll('.harga-preview').forEach(el => {
+																			el.style.display = 'none';
+																		});
 																	}
-
-																	// Gabungkan dengan angka desimal jika ada
-																	rupiah = decimal !== undefined ? rupiah + ',' + decimal : rupiah;
-
-																	// Tambahkan prefix "Rp" jika diperlukan
-																	input.value = prefix !== undefined ? prefix + ' ' + rupiah : rupiah;
-																}
+																});
 															</script>
 
 

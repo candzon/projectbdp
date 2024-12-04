@@ -81,7 +81,7 @@ class Data_akta extends CI_Controller
 				'nama_kepala_kantor' => $this->input->post('nama_kepala_kantor'),
 				'periode_awal' => $this->input->post('periode_awal') == '' ? null : $this->input->post('periode_awal'),
 				'periode_akhir' => $this->input->post('periode_akhir'),
-				'harga_sewa' => $this->input->post('total_harga_sewa')
+				'harga_sewa' => $this->input->post('total_harga_sewa_raw')
 			];
 			$check_nama_kantor = $this->model_data_akta->get_akta_by_nama_kantor($data['nama_kantor']);
 			$jenis_akta = $this->input->post('jenis_akta');
@@ -131,7 +131,7 @@ class Data_akta extends CI_Controller
 			'nomor_akta' => $this->input->post('nomor_akta'),
 			'periode_awal' => $this->input->post('periode_awal') == '' ? null : $this->input->post('periode_awal'),
 			'periode_akhir' => $this->input->post('periode_akhir'),
-			'harga_sewa' => $this->input->post('total_harga_sewa')
+			'harga_sewa' => $this->input->post('total_harga_sewa_raw')
 		];
 
 		$result = $this->model_data_akta->edit_detail_akta($id_detail_akta, $data);

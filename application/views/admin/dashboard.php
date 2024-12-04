@@ -29,15 +29,18 @@
     </div>
 
     <!-- SKDP Card Example -->
+     
     <div class="col-xl-3 col-md-6 mb-4">
       <?php foreach ($get_id_skdp as $row) {
         $get_id_skdp = $row->id_detail_skdp;
         $periode_akhir = $row->periode_akhir;
+        $collapse_id = $row->collapse_id;
         // var_dump([$get_id_skdp, $periode_akhir]);
         // die;
 
       ?>
-        <a href="<?php echo base_url('data_skdp/tampil_data_skdp/' . $get_id_skdp . '?periode_akhir=' . $periode_akhir) ?>">
+      <?php if($periode_akhir)?>
+        <a href="<?php echo base_url('data_skdp/tampil_data_skdp/' . $get_id_skdp . '?periode_akhir=' . $periode_akhir . '#collapse' . $collapse_id) ?>">
           <div class="card border-left-info shadow h-100 py-2">
             <div class="card-body">
               <div class="row no-gutters align-items-center">
