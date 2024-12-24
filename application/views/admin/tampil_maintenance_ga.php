@@ -36,6 +36,7 @@
                 <th>Alamat</th>
                 <th>Provinsi</th>
                 <th>Nomor Telepon (kantor)</th>
+                <th>Aksi</th>
                 <th>PIC Vendor</th>
             </tr>
 
@@ -46,6 +47,9 @@
                     <td><?php echo $vendor->alamat?></td>
                     <td><?php echo $vendor->provinsi?></td>
                     <td><?php echo $vendor->no_telepon_kantor?></td>
+                    <td>
+                        <?php echo anchor('data_vendor_ga/download_pdf_penilaian_vendor/'.$vendor->id_vendor, '<div class="btn btn-warning btn-sm">Penilaian PDF</div>')?>
+                    </td>
                     <td>
                     <?php echo anchor('data_vendor_ga/tampil_pic_maintenance/'.$vendor->id_vendor, '<div class="btn btn-info btn-sm">PIC Vendor</div>')?>    
                     <?php echo anchor('data_vendor_ga/edit_maintenance_ga/'.$vendor->id_vendor, '<div class="btn btn-success btn-sm">Ubah</div>')?>

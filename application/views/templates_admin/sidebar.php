@@ -159,6 +159,7 @@
 						<a class="collapse-item" href="<?php echo base_url('data_vendor_ga/tampil_maintenance_ga') ?>">Service /
 							Maintenance</a>
 						<a class="collapse-item" href="<?php echo base_url('data_vendor_ga/tampil_jasa_ga') ?>">Jasa</a>
+						<a class="collapse-item" href="<?php echo base_url('data_vendor_ga/tampil_penilaian_vendor_ga') ?>">Penilaian Vendor</a>
 					</div>
 				</div>
 			</li>
