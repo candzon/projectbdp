@@ -23,6 +23,41 @@ class Model_data_vendor_ga extends CI_Model
         }
     }
 
+    public function tampil_kategori_penilaian()
+    {
+        $this->db->select('k.*');
+        $this->db->from('sys_kategori_penilaian k');
+        $this->db->order_by('k.id_kategori');
+        $result = $this->db->get();
+
+        if ($result->num_rows() > 0) {
+            return $result->result();
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function get_aspek_penilaian($kode_kategori)
+    {
+        $this->db->select('a.*, k.kode_kategori');
+        $this->db->from('sys_aspek_penilaian a');
+        $this->db->join('sys_kategori_penilaian k', 'a.id_kategori = k.id_kategori');
+        $this->db->where('k.kode_kategori', $kode_kategori);
+        $this->db->order_by('a.id_aspek_penilaian');
+        $result = $this->db->get();
+
+        if ($result->num_rows() > 0) {
+            return $result->result();
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function simpan_penilaian($data_penilaian)
+    {
+        $this->db->insert_batch('sys_penilaian', $data_penilaian);
+    }
+
     public function tambah_penilaian_vendor($data, $table)
     {
         $this->db->insert($table, $data);

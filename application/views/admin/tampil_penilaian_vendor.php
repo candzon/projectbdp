@@ -2,6 +2,19 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Penilaian Vendor</h1>
     </div>
+    
+    <!-- Flash Message -->
+    <?php if ($this->session->flashdata('success')): ?>
+    <div class="alert alert-success">
+        <?= $this->session->flashdata('success'); ?>
+    </div>
+    <?php endif; ?>
+
+    <?php if ($this->session->flashdata('error')): ?>
+    <div class="alert alert-danger">
+        <?= $this->session->flashdata('error'); ?>
+    </div>
+    <?php endif; ?>
 
     <div class="panel panel-default">
         <div class="panel-heading mb-4">
@@ -14,7 +27,7 @@
                             <div class="col">
                                 <select name="cari" id="select-vendor" class="form-control" style="width: 600;" required>
                                     <option value="">Pilih Vendor</option>
-                                    <?php foreach ($data as $values) : ?>
+                                    <?php foreach ($vendor as $values) : ?>
                                         <option value="<?= $values->id_vendor; ?>"><?= $values->nama_vendor; ?></option>
                                     <?php endforeach; ?>
                                 </select>
@@ -23,21 +36,25 @@
                         <div class="row mt-4 justify-content-center">
                             <h6>Tingkat Kepuasan Evaluasi</h6>
                         </div>
-                        <!-- Table Penilaian A1 -->
+                        <?php if ($data != null): ?>
+                        <?php foreach ($data as $item): ?>
                         <div class="row mt-4">
                             <table class="table table-striped-columns">
                                 <tr>
-                                    <h5>A1 Pengadaan Barang</h5>
+                                    <h5><?= $item['kategori']->kode_kategori; ?> <?= $item['kategori']->keterangan; ?></h5>
                                     <th>No</th>
                                     <th>Aspek Penilaian</th>
                                     <th>Nilai</th>
                                 </tr>
                                 <tbody>
+                                    <?php $detail_no = 1;
+                                    foreach ($item['details'] as $detail):
+                                    ?>
                                     <tr>
-                                        <td>1</td>
-                                        <td>Pengiriman tepat Waktu</td>
+                                        <td><?= $detail_no; ?></td>
+                                        <td><?= $detail->aspek_penilaian; ?></td>
                                         <td>
-                                            <select name="nilai[]" id="nilai" class="form-control" required>
+                                            <select name="nilai[<?= $detail->id_aspek_penilaian; ?>]" class="form-control" required>
                                                 <option value="">Pilih Nilai</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
@@ -47,343 +64,15 @@
                                             </select>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>Pengiriman supply barang tepat waktu</td>
-                                        <td>
-                                            <select name="nilai[]" id="nilai" class="form-control" required>
-                                                <option value="">Pilih Nilai</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>Kemudahan pemesanan kelengkapan barang yang digunakan</td>
-                                        <td>
-                                            <select name="nilai[]" id="nilai" class="form-control" required>
-                                                <option value="">Pilih Nilai</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>4</td>
-                                        <td>Kecepatan penggantian peralatan yang rusak </td>
-                                        <td>
-                                            <select name="nilai[]" id="nilai" class="form-control" required>
-                                                <option value="">Pilih Nilai</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                            </select>
-                                        </td>
-                                    </tr>
+                                    <?php $detail_no++;
+								endforeach; ?>
                                 </tbody>
                             </table>
                         </div>
-                        <!-- Table Penilaian A2 -->
-                        <div class="row mt-4">
-                            <table class="table table-striped-columns">
-                                <tr>
-                                    <h5>A2 Kualitas Pekerjaan</h3>
-                                        <th>No</th>
-                                        <th>Aspek Penilaian</th>
-                                        <th>Nilai</th>
-                                </tr>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Kehadiran Karyawan</td>
-                                        <td>
-                                            <select name="nilai[]" id="nilai" class="form-control" required>
-                                                <option value="">Pilih Nilai</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>Komunikatif dan inisiatif karyawan dalam pekerjaan</td>
-                                        <td>
-                                            <select name="nilai[]" id="nilai" class="form-control" required>
-                                                <option value="">Pilih Nilai</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>Penampilan karyawan</td>
-                                        <td>
-                                            <select name="nilai[]" id="nilai" class="form-control" required>
-                                                <option value="">Pilih Nilai</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>4</td>
-                                        <td>Tindak lanjut terhadap keluhan</td>
-                                        <td>
-                                            <select name="nilai[]" id="nilai" class="form-control" required>
-                                                <option value="">Pilih Nilai</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>5</td>
-                                        <td>Hasil akhir penyelesaian pekerjaan</td>
-                                        <td>
-                                            <select name="nilai[]" id="nilai" class="form-control" required>
-                                                <option value="">Pilih Nilai</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- Table Penilaian A3 -->
-                        <div class="row mt-4">
-                            <table class="table table-striped-columns">
-                                <tr>
-                                    <h5>A3 Rental</h3>
-                                        <th>No</th>
-                                        <th>Aspek Penilaian</th>
-                                        <th>Nilai</th>
-                                </tr>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Penerimaan kendaraan sesuai waktu yang ditentukan</td>
-                                        <td>
-                                            <select name="nilai[]" id="nilai" class="form-control" required>
-                                                <option value="">Pilih Nilai</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>Penerimaan kendaraan dalam kondisi siap pakai</td>
-                                        <td>
-                                            <select name="nilai[]" id="nilai" class="form-control" required>
-                                                <option value="">Pilih Nilai</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>Pengurusan perpanjangan STNK tepat waktu</td>
-                                        <td>
-                                            <select name="nilai[]" id="nilai" class="form-control" required>
-                                                <option value="">Pilih Nilai</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>4</td>
-                                        <td>Service rutin kendaraan dilakukan dengan tuntas </td>
-                                        <td>
-                                            <select name="nilai[]" id="nilai" class="form-control" required>
-                                                <option value="">Pilih Nilai</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>5</td>
-                                        <td>Harga yang kompetitif dan melalui proses proses piching</td>
-                                        <td>
-                                            <select name="nilai[]" id="nilai" class="form-control" required>
-                                                <option value="">Pilih Nilai</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- Table Penilaian B -->
-                        <div class="row mt-4">
-                            <table class="table table-striped-columns">
-                                <tr>
-                                    <h5>B Komunikasi</h3>
-                                        <th>No</th>
-                                        <th>Aspek Penilaian</th>
-                                        <th>Nilai</th>
-                                </tr>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Vendor mudah dihubungi</td>
-                                        <td>
-                                            <select name="nilai[]" id="nilai" class="form-control" required>
-                                                <option value="">Pilih Nilai</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>Vendor ramah dan hangat melayani</td>
-                                        <td>
-                                            <select name="nilai[]" id="nilai" class="form-control" required>
-                                                <option value="">Pilih Nilai</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>Vendor cepat respon dalam menerima komplain </td>
-                                        <td>
-                                            <select name="nilai[]" id="nilai" class="form-control" required>
-                                                <option value="">Pilih Nilai</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>4</td>
-                                        <td>Respon bantuan saat keadaan darurat </td>
-                                        <td>
-                                            <select name="nilai[]" id="nilai" class="form-control" required>
-                                                <option value="">Pilih Nilai</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- Table Penilaian C -->
-                        <div class="row mt-4">
-                            <table class="table table-striped-columns">
-                                <tr>
-                                    <h5>C Proses Administrasi Keuangan</h3>
-                                        <th>No</th>
-                                        <th>Aspek Penilaian</th>
-                                        <th>Nilai</th>
-                                </tr>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Tagihan pembayaran datang sebelum jatuh tempo </td>
-                                        <td>
-                                            <select name="nilai[]" id="nilai" class="form-control" required>
-                                                <option value="">Pilih Nilai</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>Tagihan pembayaran jelas dan akurat </td>
-                                        <td>
-                                            <select name="nilai[]" id="nilai" class="form-control" required>
-                                                <option value="">Pilih Nilai</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>Kelengkapan dokumen pembayaran lengkap</td>
-                                        <td>
-                                            <select name="nilai[]" id="nilai" class="form-control" required>
-                                                <option value="">Pilih Nilai</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                        <?php endforeach; ?>
+                        <?php endif; ?>
                         <div class="row mt-4 d-flex justify-content-between">
-                            <textarea name="komentar" id="komentar" placeholder="komentar"></textarea>
+                            <!-- <textarea name="komentar" id="komentar" placeholder="komentar"></textarea> -->
                             <button type="button" id="btn-submit" class="btn btn-primary">Selesai</button>
                         </div>
                     </div>

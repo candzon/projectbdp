@@ -11,13 +11,21 @@ class Data_vendor_ga extends CI_Controller
 
     public function tampil_penilaian_vendor_ga()
     {
-        $data['data'] = $this->model_data_vendor_ga->tampil_vendor_penilaian();
+        $aspek_kategori = $this->model_data_vendor_ga->tampil_kategori_penilaian();
+        $vendor = $this->model_data_vendor_ga->tampil_vendor_penilaian();
 
-
+        $data = [];
+        foreach ($aspek_kategori as $kategori) {
+            $details = $this->model_data_vendor_ga->get_aspek_penilaian($kategori->kode_kategori);
+            $data[] = [
+                'kategori' => $kategori,
+                'details' => $details,
+            ];
+        }
 
         $this->load->view('templates_admin/header');
         $this->load->view('templates_admin/sidebar');
-        $this->load->view('admin/tampil_penilaian_vendor', $data);
+        $this->load->view('admin/tampil_penilaian_vendor', ['data' => $data,'vendor' => $vendor]);
         $this->load->view('templates_admin/footer');
     }
 
@@ -1496,47 +1504,82 @@ class Data_vendor_ga extends CI_Controller
         $this->load->view('templates_admin/footer');
     }
 
+    // public function tambah_penilaian_vendor_aksi()
+    // {
+    //     $this->form_validation->set_rules('cari', 'Nama Vendor', 'required', [
+    //         'required' => 'Nama Vendor Tidak Boleh Kosong!'
+    //     ]);
+    //     $this->form_validation->set_rules('nilai[]', 'Nilai', 'required', [
+    //         'required' => 'Nilai Tidak Boleh Kosong!'
+    //     ]);
+
+    //     $id_vendor = $this->input->post('cari');
+    //     $nilai = $this->input->post('nilai');
+    //     $komentar = $this->input->post('komentar');
+
+    //     if ($this->form_validation->run() == FALSE) {
+    //         $this->tambah_penilaian_vendor();
+    //     } else {
+    //         foreach ($nilai as $key => $value) {
+    //             $data = array(
+    //                 'id_vendor' => $id_vendor,
+    //                 'aspek_penilaian' => $key + 1,
+    //                 'nilai' => $value,
+    //                 'created_at' => date('Y-m-d H:i:s'),
+    //                 'updated_at' => date('Y-m-d H:i:s')
+    //             );
+    //             $this->model_data_vendor_ga->tambah_penilaian_vendor($data, 'sys_penilaian_vendor');
+    //         }
+
+    //         $data = array(
+    //             'id_vendor' => $id_vendor,
+    //             'komentar' => $komentar,
+    //             'created_at' => date('Y-m-d H:i:s'),
+    //             'updated_at' => date('Y-m-d H:i:s')
+    //         );
+
+    //         $this->model_data_vendor_ga->tambah_penilaian_vendor($data, 'sys_komentar_penilaian');
+
+    //         $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Berhasil!</strong> Menambah Data Penilaian Vendor<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+    //         redirect('data_vendor_ga/tampil_penilaian_vendor_ga');
+    //     }
+    // }
+
     public function tambah_penilaian_vendor_aksi()
     {
-        $this->form_validation->set_rules('cari', 'Nama Vendor', 'required', [
-            'required' => 'Nama Vendor Tidak Boleh Kosong!'
-        ]);
-        $this->form_validation->set_rules('nilai[]', 'Nilai', 'required', [
-            'required' => 'Nilai Tidak Boleh Kosong!'
-        ]);
-
         $id_vendor = $this->input->post('cari');
-        $nilai = $this->input->post('nilai');
-        $komentar = $this->input->post('komentar');
+        $nilai_list = $this->input->post('nilai');
 
-        if ($this->form_validation->run() == FALSE) {
-            $this->tambah_penilaian_vendor();
-        } else {
-            foreach ($nilai as $key => $value) {
-                $data = array(
-                    'id_vendor' => $id_vendor,
-                    'aspek_penilaian' => $key + 1,
-                    'nilai' => $value,
-                    'created_at' => date('Y-m-d H:i:s'),
-                    'updated_at' => date('Y-m-d H:i:s')
-                );
-                $this->model_data_vendor_ga->tambah_penilaian_vendor($data, 'sys_penilaian_vendor');
-            }
-
-            $data = array(
-                'id_vendor' => $id_vendor,
-                'komentar' => $komentar,
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s')
-            );
-
-            $this->model_data_vendor_ga->tambah_penilaian_vendor($data, 'sys_komentar_penilaian');
-
-            $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Berhasil!</strong> Menambah Data Penilaian Vendor<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+        // Validasi data
+        if (empty($id_vendor) || empty($nilai_list)) {
+            $this->session->set_flashdata('error', 'Vendor atau nilai tidak boleh kosong.');
             redirect('data_vendor_ga/tampil_penilaian_vendor_ga');
         }
-    }
 
+        foreach ($nilai_list as $nilai) {
+            if ($nilai < 1 || $nilai > 5) {
+                $this->session->set_flashdata('error', 'Nilai harus antara 1 dan 5.');
+                redirect('data_vendor_ga/tampil_penilaian_vendor_ga');
+            }
+        }
+
+        // Simpan data jika validasi lolos
+        $data_penilaian = [];
+        foreach ($nilai_list as $id_aspek_penilaian => $nilai) {
+            $data_penilaian[] = [
+                'id_vendor' => $id_vendor,
+                'id_aspek_penilaian' => $id_aspek_penilaian,
+                'nilai' => $nilai,
+                'tanggal_penilaian' => date('Y-m-d'),
+            ];
+        }
+
+        $this->load->model('model_data_vendor_ga');
+        $this->model_data_vendor_ga->simpan_penilaian($data_penilaian);
+
+        $this->session->set_flashdata('success', 'Penilaian berhasil disimpan.');
+        redirect('data_vendor_ga/tampil_penilaian_vendor_ga');
+    }
 
     public function download_pdf_penilaian_vendor($id_vendor)
     {
