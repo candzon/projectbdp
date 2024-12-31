@@ -61,15 +61,10 @@ class Model_data_vendor_ga extends CI_Model
 
     public function tampil_maintenance_ga()
     {
-        $this->db->select('a.*, b.komentar, c.aspek_penilaian, c.nilai, c.created_at as tgl_evaluasi');
+        $this->db->select('a.*');
         $this->db->from('sys_vendor a');
-        $this->db->join('sys_komentar_penilaian b', 'a.id_vendor = b.id_vendor', 'left');
-        $this->db->join('sys_penilaian_vendor c', 'a.id_vendor = c.id_vendor', 'left');
         $this->db->where('a.jenis_vendor', 'service');
-        $this->db->where('b.id_vendor IS NOT NULL');
-        $this->db->where('c.id_vendor IS NOT NULL');
         $this->db->order_by('a.id_vendor', 'DESC');
-        $this->db->limit(1);
         $result = $this->db->get();
 
         if ($result->num_rows() > 0) {
@@ -77,6 +72,64 @@ class Model_data_vendor_ga extends CI_Model
         } else {
             return FALSE;
         }
+    }
+    
+    public function get_penilaian_by_vendor($id_vendor) {
+        $this->db->distinct();
+        $this->db->select('id_vendor, tanggal_penilaian');
+        $this->db->where('id_vendor', $id_vendor);
+        $query = $this->db->get('sys_penilaian');
+        
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        } else {
+            return [];
+        }
+    }
+
+    public function get_vendor_by_id($id_vendor)
+    {
+        return $this->db->get_where('sys_vendor', ['id_vendor' => $id_vendor])->row();
+    }
+
+    public function get_pic_join_vendor_by_id($id_vendor)
+    {
+        $this->db->select('a.*, b.*');
+        $this->db->from('sys_vendor a');
+        $this->db->join('sys_pic_vendor b', 'a.id_vendor = b.id_vendor');
+        $this->db->where('a.id_vendor', $id_vendor);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function get_penilaian_by_vendor_and_date($id_vendor, $tanggal_penilaian)
+    {
+        $this->db->select('p.*, a.aspek_penilaian, k.kode_kategori');
+        $this->db->from('sys_penilaian p');
+        $this->db->join('sys_aspek_penilaian a', 'p.id_aspek_penilaian = a.id_aspek_penilaian', 'inner');
+        $this->db->join('sys_kategori_penilaian k', 'a.id_kategori = k.id_kategori', 'inner');
+        $this->db->where('p.id_vendor', $id_vendor);
+        $this->db->where('p.tanggal_penilaian', $tanggal_penilaian);
+        $this->db->order_by('p.id_aspek_penilaian');
+    
+        $query = $this->db->get();
+        
+        return $query->result();
+    }
+
+    public function get_penilaian_average($id_vendor, $tanggal_penilaian)
+    {
+        $this->db->select('AVG(p.nilai) AS rata_rata');
+        $this->db->from('sys_penilaian p');
+        $this->db->where('p.id_vendor', $id_vendor);
+        $this->db->where('p.tanggal_penilaian', $tanggal_penilaian);
+        $this->db->order_by('p.id_aspek_penilaian');
+    
+        $query = $this->db->get();
+        
+        $result = $query->row();
+        return $result ? $result->rata_rata : null;
     }
 
     public function tampil_jasa_ga()

@@ -1,4 +1,6 @@
 <?php
+use Dompdf\Dompdf;
+use Dompdf\Options;
 class Data_vendor_ga extends CI_Controller
 {
     public function __construct()
@@ -43,14 +45,101 @@ class Data_vendor_ga extends CI_Controller
 
     public function tampil_maintenance_ga()
     {
+        $vendors = $this->model_data_vendor_ga->tampil_maintenance_ga();
 
-        $data['data'] = $this->model_data_vendor_ga->tampil_maintenance_ga();
+        $data = [];
+        foreach ($vendors as $vendor) {
+            $details = $this->model_data_vendor_ga->get_penilaian_by_vendor($vendor->id_vendor);
+            $data[] = [
+                'vendor' => $vendor,
+                'details' => $details
+            ];
+        }
 
         $this->load->view('templates_admin/header');
         $this->load->view('templates_admin/sidebar');
-        $this->load->view('admin/tampil_maintenance_ga', $data);
+        $this->load->view('admin/tampil_maintenance_ga', ['data' => $data]);
         $this->load->view('templates_admin/footer');
+    }     
+
+    public function print_penilaian_pdf($id_vendor, $tanggal_penilaian)
+    {
+        // Load model dan ambil data
+        $this->load->model('model_data_vendor_ga');
+        $vendor = $this->model_data_vendor_ga->get_pic_join_vendor_by_id($id_vendor);
+        $penilaian = $this->model_data_vendor_ga->get_penilaian_by_vendor_and_date($id_vendor, $tanggal_penilaian);
+        $rata_rata = $this->model_data_vendor_ga->get_penilaian_average($id_vendor, $tanggal_penilaian);
+
+        // Validasi data
+        if (!$vendor || !$penilaian) {
+            log_message('error', 'Data vendor atau penilaian tidak ditemukan untuk ID: ' . $id_vendor . ' pada tanggal: ' . $tanggal_penilaian);
+            show_404();
+            return;
+        }
+
+        // Siapkan data untuk template
+        $data = [
+            'vendor' => $vendor,
+            'penilaian' => $penilaian,
+            'tanggal_penilaian' => $tanggal_penilaian,
+            'rata_rata' => $rata_rata,
+        ];
+
+        // Load view untuk template PDF
+        $html = $this->load->view('templates_admin/penilaian_pdf_template', $data, true);
+
+        // Inisialisasi Dompdf
+        $this->load->library('dompdf_gen');
+        $options = new Options();
+        $options->set('isRemoteEnabled', true);
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        
+        // Render PDF
+        $dompdf->render();
+
+        // Output PDF ke browser
+        $dompdf->stream("Penilaian_Vendor_{$id_vendor}_{$tanggal_penilaian}.pdf", ["Attachment" => 0]);
     }
+
+    
+    // public function print_penilaian_pdf($id_vendor, $tanggal_penilaian)
+    // {
+    //     // Load model untuk mendapatkan data
+    //     $this->load->model('model_data_vendor_ga');
+    //     $vendor = $this->model_data_vendor_ga->get_pic_join_vendor_by_id($id_vendor);
+    //     $penilaian = $this->model_data_vendor_ga->get_penilaian_by_vendor_and_date($id_vendor, $tanggal_penilaian);
+
+    //     if (!$vendor || !$penilaian) {
+    //         show_404();
+    //     }
+
+    //     // Load library TCPDF
+    //     $this->load->library('Tcpdf_gen');
+
+    //     // Inisialisasi TCPDF
+    //     $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
+    //     $pdf->SetCreator(PDF_CREATOR);
+    //     $pdf->SetTitle('Formulir Evaluasi Penilaian Vendor');
+    //     $pdf->AddPage();
+
+    //     // Data yang akan diteruskan ke template
+    //     $data = [
+    //         'vendor' => $vendor,
+    //         'penilaian' => $penilaian,
+    //         'tanggal_penilaian' => $tanggal_penilaian,
+    //     ];
+
+    //     // Render view ke string
+    //     $html = $this->load->view('templates_admin/penilaian_pdf_template', $data, true);
+
+    //     // Tambahkan HTML ke PDF
+    //     $pdf->writeHTML($html, true, false, true, false, '');
+
+    //     // Output PDF
+    //     $pdf->Output('Penilaian_Vendor_' . $id_vendor . '_' . $tanggal_penilaian . '.pdf', 'I');
+    // }
 
     public function tampil_maintenance_ga_procurement()
     {
