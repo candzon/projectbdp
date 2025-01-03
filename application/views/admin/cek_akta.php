@@ -104,14 +104,9 @@
 					<div class="form-group">
 						<label for="total_harga_sewa">Harga Sewa</label>
 						<div style="position:relative;">
-							<input type="text"
-								name="total_harga_sewa"
-								placeholder="Masukkan Harga Sewa"
-								class="form-control rupiah-input"
-								id="total_harga_sewa"
-								data-id="new">
-							<div id="hargaPreview_new"
-								class="harga-preview"
+							<input type="text" name="total_harga_sewa" placeholder="Masukkan Harga Sewa"
+								class="form-control rupiah-input" id="total_harga_sewa" data-id="new">
+							<div id="hargaPreview_new" class="harga-preview"
 								style="display:none; position:absolute; top:100%; left:0; background:#fff; padding:5px; border:1px solid #ccc; border-radius:3px; margin-top:5px; z-index:1000;">
 							</div>
 							<input type="hidden" name="total_harga_sewa_raw" id="total_harga_sewa_raw_new">
@@ -143,9 +138,6 @@
 							}
 						});
 					</script>
-
-
-
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
@@ -172,7 +164,7 @@
 	<tbody id="tableBody">
 		<?php $no = 1;
 		foreach ($data as $sys_akta):
-			$details = $this->model_data_akta->get_detail_akta($sys_akta->id);
+			$details = $this->model_data_akta->get_period_child($sys_akta->id);
 		?>
 			<tr align="center">
 				<td><?= $no; ?></td>
@@ -339,20 +331,16 @@
 															<div class="form-group">
 																<label for="total_harga_sewa_<?= $detail->id_detail_akta ?>">Harga Sewa</label>
 																<div style="position:relative;">
-																	<input value="<?= number_format($detail->harga_sewa, 0, ',', '.') ?>"
-																		autocomplete="off"
-																		type="text"
-																		name="total_harga_sewa"
-																		placeholder="Masukkan Total Harga Sewa"
-																		class="form-control rupiah-input"
-																		id="total_harga_sewa_<?= $detail->id_detail_akta ?>"
+																	<input value="<?= number_format($detail->harga_sewa, 0, ',', '.') ?>" autocomplete="off"
+																		type="text" name="total_harga_sewa" placeholder="Masukkan Total Harga Sewa"
+																		class="form-control rupiah-input" id="total_harga_sewa_<?= $detail->id_detail_akta ?>"
 																		data-id="<?= $detail->id_detail_akta ?>">
-																	<div id="hargaPreview_<?= $detail->id_detail_akta ?>"
-																		class="harga-preview"
+																	<div id="hargaPreview_<?= $detail->id_detail_akta ?>" class="harga-preview"
 																		style="display:none; position:absolute; top:100%; left:0; background:#fff; padding:5px; border:1px solid #ccc; border-radius:3px; margin-top:5px; z-index:1000;">
 																	</div>
 																	<!-- Hidden input untuk menyimpan nilai tanpa format -->
-																	<input type="hidden" name="total_harga_sewa_raw" id="total_harga_sewa_raw_<?= $detail->id_detail_akta ?>">
+																	<input type="hidden" name="total_harga_sewa_raw"
+																		id="total_harga_sewa_raw_<?= $detail->id_detail_akta ?>">
 																</div>
 															</div>
 
@@ -394,6 +382,7 @@
 																<button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
 																<button type="submit" class="btn btn-primary">Simpan</button>
 															</div>
+														</div>
 													</form>
 												</div>
 											</div>

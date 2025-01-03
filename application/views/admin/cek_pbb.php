@@ -87,14 +87,9 @@
 						<div class="form-group">
 							<label for="jumlah_pembayaran">Jumlah Pembayaran</label>
 							<div style="position:relative;">
-								<input type="text"
-									name="jumlah_pembayaran" 
-									placeholder="Masukkan Jumlah Pembayaran"
-									class="form-control rupiah-input"
-									id="jumlah_pembayaran"
-									data-id="new">
-								<div id="bayarPreview_new"
-									class="bayar-preview"
+								<input type="text" name="jumlah_pembayaran" placeholder="Masukkan Jumlah Pembayaran"
+									class="form-control rupiah-input" id="jumlah_pembayaran" data-id="new">
+								<div id="bayarPreview_new" class="bayar-preview"
 									style="display:none; position:absolute; top:100%; left:0; background:#fff; padding:5px; border:1px solid #ccc; border-radius:3px; margin-top:5px; z-index:1000;">
 								</div>
 								<input type="hidden" name="jumlah_pembayaran_raw" id="jumlah_pembayaran_raw_new">
@@ -157,8 +152,7 @@
 	<tbody id="tableBody">
 		<?php $no = 1;
 		foreach ($data as $sys_pbb):
-			$details = $this->model_data_pbb->get_detail_pbb($sys_pbb->id);
-
+			$details = $this->model_data_pbb->get_period_child($sys_pbb->id);
 			$get_dokumen = $this->db->select('dokumen_path')
 				->order_by('dokumen_uploaded_at', 'DESC')
 				->where('id_pbb', $sys_pbb->id)
@@ -174,11 +168,14 @@
 				<td><?= $sys_pbb->luas; ?></td>
 				<td>
 					<div class="action-buttons">
-						<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse<?= $no; ?>">Detail</button>
+						<button class="btn btn-primary" type="button" data-toggle="collapse"
+							data-target="#collapse<?= $no; ?>">Detail</button>
 						<?php if (!empty($get_dokumen) && isset($get_dokumen->dokumen_path)): ?>
-							<a class="btn btn-secondary" href="<?= base_url('upload/' . $get_dokumen->dokumen_path); ?>" target="_blank"><i class="fas fa-eye"></i> Lihat Dokumen</a>
+							<a class="btn btn-secondary" href="<?= base_url('upload/' . $get_dokumen->dokumen_path); ?>"
+								target="_blank"><i class="fas fa-eye"></i> Lihat Dokumen</a>
 						<?php else: ?>
-							<a class="btn btn-secondary" href="javascript:void(0);" title="Data kosong"><i class="fas fa-eye"></i> Lihat Dokumen</a>
+							<a class="btn btn-secondary" href="javascript:void(0);" title="Data kosong"><i class="fas fa-eye"></i> Lihat
+								Dokumen</a>
 						<?php endif; ?>
 						<!-- history -->
 						<button class="btn btn-primary" type="button" data-toggle="collapse"
@@ -274,13 +271,16 @@
 											<td>
 												<!-- delete -->
 												<div class="action-buttons">
-													<a class="btn btn-danger mr-2" data-id_detail_pbb="<?= $detail->id; ?>" href="javascript:void(0);" onclick="deletedata(this)">Hapus</a>
+													<a class="btn btn-danger mr-2" data-id_detail_pbb="<?= $detail->id; ?>" href="javascript:void(0);"
+														onclick="deletedata(this)">Hapus</a>
 													<button class="btn btn-primary mr-2" type="button" data-toggle="modal"
 														data-target="#editModal<?= $detail->id; ?>">Ubah</button>
 													<!-- Button Upload Dokumen -->
-													<a class="btn btn-secondary" href="" data-toggle="modal" data-target="#uploadModal<?= $detail->id; ?>"><i class="fas fa-upload"></i> Upload Dokumen</a>
+													<a class="btn btn-secondary" href="" data-toggle="modal"
+														data-target="#uploadModal<?= $detail->id; ?>"><i class="fas fa-upload"></i> Upload Dokumen</a>
 													<!-- modal upload -->
-													<div class="modal fade" id="uploadModal<?= $detail->id; ?>" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel" aria-hidden="true">
+													<div class="modal fade" id="uploadModal<?= $detail->id; ?>" tabindex="-1" role="dialog"
+														aria-labelledby="uploadModalLabel" aria-hidden="true">
 														<div class="modal-dialog" role="document">
 															<div class="modal-content">
 																<div class="modal-header">
@@ -290,12 +290,14 @@
 																	</button>
 																</div>
 																<!-- Isi Form Upload -->
-																<form action="<?= base_url('data_pbb/upload_dokumen/') ?>" method="post" enctype="multipart/form-data">
+																<form action="<?= base_url('data_pbb/upload_dokumen/') ?>" method="post"
+																	enctype="multipart/form-data">
 																	<input type="hidden" name="id" value="<?= $detail->id ?>">
 																	<div class="modal-body">
 																		<div class="form-group">
 																			<label for="dokumen">Dokumen (PDF, DOC, DOCX)</label>
-																			<input type="file" class="form-control" id="dokumen" name="dokumen" accept=".pdf, .doc, .docx">
+																			<input type="file" class="form-control" id="dokumen" name="dokumen"
+																				accept=".pdf, .doc, .docx">
 																		</div>
 																	</div>
 																	<div class="modal-footer">
@@ -334,49 +336,45 @@
 																<label for="jumlah_pembayaran_<?= $detail->id ?>">Jumlah Pembayaran</label>
 																<div style="position:relative;">
 																	<input value="<?= number_format($detail->jumlah_pembayaran, 0, ',', '.') ?>"
-																		autocomplete="off"
-																		type="text" 
-																		name="jumlah_pembayaran"
-																		placeholder="Masukkan Jumlah Pembayaran"
-																		class="form-control rupiah-input"
-																		id="jumlah_pembayaran_<?= $detail->id ?>"
-																		data-id="<?= $detail->id ?>">
-																	<div id="bayarPreview_<?= $detail->id ?>"
-																		class="bayar-preview"
+																		autocomplete="off" type="text" name="jumlah_pembayaran"
+																		placeholder="Masukkan Jumlah Pembayaran" class="form-control rupiah-input"
+																		id="jumlah_pembayaran_<?= $detail->id ?>" data-id="<?= $detail->id ?>">
+																	<div id="bayarPreview_<?= $detail->id ?>" class="bayar-preview"
 																		style="display:none; position:absolute; top:100%; left:0; background:#fff; padding:5px; border:1px solid #ccc; border-radius:3px; margin-top:5px; z-index:1000;">
 																	</div>
-																	<input type="hidden" name="jumlah_pembayaran_raw" id="jumlah_pembayaran_raw_<?= $detail->id ?>">
+																	<input type="hidden" name="jumlah_pembayaran_raw"
+																		id="jumlah_pembayaran_raw_<?= $detail->id ?>">
 																</div>
 															</div>
 
 															<script>
-															document.querySelectorAll('.rupiah-input').forEach(input => {
-																input.addEventListener('input', function(e) {
-																	let value = this.value.replace(/[^\d]/g, '');
-																	let id = this.getAttribute('data-id');
+																document.querySelectorAll('.rupiah-input').forEach(input => {
+																	input.addEventListener('input', function(e) {
+																		let value = this.value.replace(/[^\d]/g, '');
+																		let id = this.getAttribute('data-id');
 
-																	if (value !== '') {
-																		document.getElementById('jumlah_pembayaran_raw_' + id).value = value;
-																		let formatted = new Intl.NumberFormat('id-ID').format(value);
-																		this.value = formatted;
+																		if (value !== '') {
+																			document.getElementById('jumlah_pembayaran_raw_' + id).value = value;
+																			let formatted = new Intl.NumberFormat('id-ID').format(value);
+																			this.value = formatted;
 
-																		let preview = document.getElementById('bayarPreview_' + id);
-																		preview.innerHTML = 'Rp ' + formatted;
-																		preview.style.display = 'block';
-																	} else {
-																		document.getElementById('jumlah_pembayaran_raw_' + id).value = '';
-																		document.getElementById('bayarPreview_' + id).style.display = 'none';
+																			let preview = document.getElementById('bayarPreview_' + id);
+																			preview.innerHTML = 'Rp ' + formatted;
+																			preview.style.display = 'block';
+																		} else {
+																			document.getElementById('jumlah_pembayaran_raw_' + id).value = '';
+																			document.getElementById('bayarPreview_' + id).style.display = 'none';
+																		}
+																	});
+																});
+
+																document.addEventListener('click', function(e) {
+																	if (!e.target.classList.contains('rupiah-input')) {
+																		document.querySelectorAll('.bayar-preview').forEach(el => {
+																			el.style.display = 'none';
+																		});
 																	}
 																});
-															});
-
-															document.addEventListener('click', function(e) {
-																if (!e.target.classList.contains('rupiah-input')) {
-																	document.querySelectorAll('.bayar-preview').forEach(el => {
-																		el.style.display = 'none';
-																	});
-																}
-															});
 															</script>
 															<div class="form-group">
 																<label for="tanggal_pembayaran">Tanggal Pembayaran</label>

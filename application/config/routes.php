@@ -52,3 +52,5 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['default_controller'] = 'welcome';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
+$route['data_vendor_ga/get_vendor_details/(:num)'] = 'data_vendor_ga/get_vendor_details/$1';
+$route['data_vendor_ga/print_penilaian_pdf/(:num)/(:any)'] = 'data_vendor_ga/print_penilaian_pdf/$1/$2';

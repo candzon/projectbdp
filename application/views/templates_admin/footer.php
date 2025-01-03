@@ -1,4 +1,10 @@
- <!-- Bootstrap core JavaScript-->
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+<!-- Popper.js (untuk Bootstrap 4) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+
+<!-- Bootstrap core JavaScript-->
  <script src="<?php echo base_url() ?>assets/vendor/jquery/jquery.min.js"></script>
  <script src="<?php echo base_url() ?>assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
@@ -16,8 +22,6 @@
  <script src="<?php echo base_url() ?>assets/alert/sweetalert2.all.min.js"></script>
  <script src="<?php echo base_url() ?>assets/sweetalert/sweetalert.min.js"></script>
  <script src="<?php echo base_url() ?>assets/sweetalert/sweetalert-dev.js"></script>
- <script src="https://code.jquery.com/jquery-3.6.0.min.js"
- 	integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
  <script>
  	$('#pilih_karyawan').select2({
@@ -35,22 +39,22 @@
  	});
  </script>
  <script>
- 	function logout() {
- 		$('.logout').click(function() {
-
- 			swal({
- 				title: "Anda Yakin Ingin Keluar?",
- 				type: "warning",
- 				showCancelButton: true,
- 				confirmButtonColor: "#FF0000",
- 				cancelButtonColor: "#d33",
- 				confirmButtonText: "Ya",
- 			}, function() {
- 				window.location = "../login/logout"
- 			})
- 		});
- 	}
+	function showConfirmation(className, title, windowLocation) {
+		$('.' + className).click(function() {
+			swal({
+				title: title,
+				type: "warning",
+				showCancelButton: true,
+				confirmButtonColor: "#FF0000",
+				cancelButtonColor: "#d33",
+				confirmButtonText: "Ya",
+			}, function() {
+				window.location = windowLocation;
+			});
+		});
+	}
  </script>
+ 
  </body>
 
  </html>

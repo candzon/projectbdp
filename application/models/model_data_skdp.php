@@ -2,13 +2,41 @@
 class Model_data_skdp extends CI_Model
 {
 
-	public function tampil_data()
+	public function tampil_data($collapse_id = null)
 	{
 		// $result = $this->db->query("SELECT * FROM sys_detail_skdp  ORDER BY id_detail_skdp DESC ");
-		$this->db->select('sys_detail_skdp.*, sys_akun.nama AS deleted_by_user')
-			->from('sys_detail_skdp')
-			->join('sys_akun', 'sys_akun.id = sys_detail_skdp.deleted_by', 'left')
+		$this->db->select('a.*, b.nama AS deleted_by_user, c.*')
+			->from('sys_detail_skdp a')
+			->join('sys_akun b', 'b.id = a.deleted_by', 'left')
+			->join('sys_alamat c', 'c.nama_kantor = a.nama_kantor')
 			->order_by('id_detail_skdp', 'DESC');
+		return $this->db->get()->result();
+	}
+
+	public function cek_dokumen_period()
+	{
+		$this->db->select('a.*, b.nama AS deleted_by_user, c.*')
+			->from('sys_detail_skdp a')
+			->join('sys_akun b', 'b.id = a.deleted_by', 'left')
+			->join('sys_alamat c', 'c.nama_kantor = a.nama_kantor')
+			->where('a.periode_akhir >=', date('Y-m-d'))
+			->where('a.periode_akhir <=', date('Y-m-d', strtotime('+3 month')))
+			->order_by('id_detail_skdp', 'DESC');
+
+		return $this->db->get()->result();
+	}
+
+	public function count_period()
+	{
+		$this->db->select('a.*, b.nama AS deleted_by_user, c.*')
+			->from('sys_detail_skdp a')
+			->join('sys_akun b', 'b.id = a.deleted_by', 'left')
+			->join('sys_alamat c', 'c.nama_kantor = a.nama_kantor')
+			->where('a.periode_akhir >=', date('Y-m-d'))
+			->where('a.periode_akhir <=', date('Y-m-d', strtotime('+3 month')))
+			->where('a.deleted_at IS NULL')
+			->order_by('id_detail_skdp', 'DESC');
+
 		return $this->db->get()->result();
 	}
 
@@ -40,6 +68,7 @@ class Model_data_skdp extends CI_Model
 			return FALSE;
 		}
 	}
+
 	public function upload_dokumen($id, $data)
 	{
 		$this->db->where('id_detail_skdp', $id);

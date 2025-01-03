@@ -5,6 +5,7 @@ class Data_pbb extends CI_Controller
 	{
 		parent::__construct();
 		$this->load->model(['model_data_pbb', 'model_data_alamat']);
+		$this->load->library('upload');
 	}
 
 	public function tampil_data_pbb()
@@ -14,6 +15,18 @@ class Data_pbb extends CI_Controller
 		$this->load->view('templates_admin/header');
 		$this->load->view('templates_admin/sidebar');
 		$this->load->view('admin/data_pbb', $data);
+		$this->load->view('templates_admin/footer');
+	}
+
+	public function cek_dokumen_pbb()
+	{
+		$data['data'] = $this->model_data_pbb->get_period_parent();
+
+		$data['kantor'] = $this->model_data_alamat->findAll();
+
+		$this->load->view('templates_admin/header');
+		$this->load->view('templates_admin/sidebar');
+		$this->load->view('admin/cek_pbb', $data);
 		$this->load->view('templates_admin/footer');
 	}
 
@@ -31,6 +44,51 @@ class Data_pbb extends CI_Controller
 
 		// return data as JSON
 		echo json_encode($data);
+	}
+
+	public function upload_dokumen()
+	{
+		$config['upload_path'] = './upload/';
+		$config['allowed_types'] = 'pdf|doc|docx';
+		$config['max_size'] = 100048;
+
+		$this->upload->initialize($config);
+
+		// cek apakah ada file yang diupload
+		$file = $_FILES['dokumen'];
+
+		if ($file['name'] == '') {
+			$this->session->set_flashdata('message', '<div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Gagal!</strong> File Tidak Boleh Kosong!<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+			redirect('data_pbb/tampil_data_pbb');
+		} else {
+			// Generate unique file name
+			$unique_file_name = time() . '_' . uniqid() . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
+			$_FILES['dokumen']['name'] = $unique_file_name;
+
+			if ($this->upload->do_upload('dokumen')) {
+				$upload_data = $this->upload->data();
+				$data = [
+					"dokumen_path" => $upload_data['file_name'],
+					"dokumen_uploaded_at" => date('Y-m-d H:i:s'),
+				];
+
+				$callback = $this->model_data_pbb->upload_dokumen($this->input->post('id'), $data);
+
+				if ($callback) {
+					$this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Berhasil!</strong> Upload Dokumen Berhasil!<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+					redirect('data_pbb/tampil_data_pbb');
+				} else {
+					$this->session->set_flashdata('message', '<div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Gagal!</strong> Upload Dokumen Gagal! Pastikan File yang Diupload Berformat PDF, DOC, atau DOCX dan Maksimal 100MB!<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+					redirect('data_pbb/tampil_data_pbb');
+				}
+			} else {
+				$this->session->set_flashdata('message', '<div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Gagal!</strong> Upload Dokumen Gagal! Data Kosong<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+				redirect('data_pbb/tampil_data_pbb');
+			}
+		}
+
+		// redirect ke halaman data pbb
+		redirect('data_pbb/tampil_data_pbb');
 	}
 
 	public function tambah_pbb()
@@ -65,7 +123,7 @@ class Data_pbb extends CI_Controller
 			$id_pbb = $this->input->post('id_pbb');
 			$data = [
 				'tahun' => $this->input->post('tahun'),
-				'jumlah_pembayaran' => $this->input->post('jumlah_pembayaran'),
+				'jumlah_pembayaran' => $this->input->post('jumlah_pembayaran_raw'),
 				'tanggal_pembayaran' => $this->input->post('tanggal_pembayaran'),
 			];
 			$this->model_data_pbb->tambah_detail_pbb($id_pbb, $data);
@@ -87,7 +145,7 @@ class Data_pbb extends CI_Controller
 		$id = $this->input->post('id');
 		$data = [
 			'tahun' => $this->input->post('tahun'),
-			'jumlah_pembayaran' => $this->input->post('jumlah_pembayaran'),
+			'jumlah_pembayaran' => $this->input->post('jumlah_pembayaran_raw'),
 			'tanggal_pembayaran' => $this->input->post('tanggal_pembayaran'),
 		];
 		$result = $this->model_data_pbb->edit_detail_pbb($id, $data);

@@ -27,50 +27,72 @@
             </div>
         <?php endif;?>
 
-        <?php if($data != null):?>
-        <table class="table table-bordered table-striped table-hover table-sm small">
-            <tr  align="center"> 
-                <?php $no =1?>
-                <th>No</th>
-                <th>Nama Vendor</th>
-                <th>Alamat</th>
-                <th>Provinsi</th>
-                <th>Nomor Telepon (kantor)</th>
-                <th>PIC Vendor</th>
-            </tr>
+        <?php if ($data != null): ?>
+<table class="table table-bordered table-striped table-hover table-sm small">
+    <tr align="center">
+        <th>No</th>
+        <th>Nama Vendor</th>
+        <th>Alamat</th>
+        <th>Provinsi</th>
+        <th>Nomor Telepon (kantor)</th>
+        <th>Aksi</th>
+    </tr>
+    <?php $no = 1; ?>
+    <?php foreach ($data as $item): ?>
+        <tr align="center">
+            <td><?php echo $no++; ?></td>
+            <td><?php echo $item['vendor']->nama_vendor; ?></td>
+            <td><?php echo $item['vendor']->alamat; ?></td>
+            <td><?php echo $item['vendor']->provinsi; ?></td>
+            <td><?php echo $item['vendor']->no_telepon_kantor; ?></td>
+            <td>
+                <?php echo anchor('data_vendor_ga/tampil_pic_maintenance/' . $item['vendor']->id_vendor, '<div class="btn btn-info btn-sm">PIC Vendor</div>'); ?>    
+                <?php echo anchor('data_vendor_ga/edit_maintenance_ga/' . $item['vendor']->id_vendor, '<div class="btn btn-success btn-sm">Ubah</div>'); ?>
+                <a onclick="deletedata()" id_vendor="<?php echo $item['vendor']->id_vendor; ?>" data-toggle="tooltip" data-placement="bottom" title="Hapus" class="btn btn-danger btn-sm delete text-white">Hapus</a>
+                <button class="btn btn-secondary btn-sm" type="button" data-toggle="collapse" data-target="#collapse-<?php echo $item['vendor']->id_vendor; ?>" aria-expanded="false" aria-controls="collapse-<?php echo $item['vendor']->id_vendor; ?>">
+                    Detail
+                </button>
+            </td>
+        </tr>
+        <tr id="collapse-<?php echo $item['vendor']->id_vendor; ?>" class="collapse">
+            <td colspan="7">
+                <div class="card">
+                    <div class="card-header">
+                        <strong>History: <?= $item['vendor']->nama_vendor; ?></strong>
+                    </div>
+                    <div id="details-<?php echo $item['vendor']->id_vendor; ?>" class="details card card-body">
+                    <?php if (!empty($item['details'])): ?>
+                        <table class="table table-bordered">
+							<thead>
+								<tr align="center">
+									<th>No</th>
+									<th>Tanggal Penilaian</th>
+									<th>aksi</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php $detail_no = 1;
+								foreach ($item['details'] as $detail):
+								?>
+									<tr align="center">
+										<td><?= $detail_no; ?></td>
+										<td><?php echo $detail->tanggal_penilaian; ?></td>
+										<td><a href="<?php echo base_url('data_vendor_ga/print_penilaian_pdf/' . $item['vendor']->id_vendor . '/' . urlencode($detail->tanggal_penilaian)); ?>" 
+                                        target="_blank" class="btn btn-sm btn-warning ml-2">Print Penilaian PDF</a></td>
+									</tr>
+								<?php $detail_no++;
+								endforeach; ?>
+							</tbody>
+						</table>
+                    <?php else: ?>
+                        <p>Tidak ada riwayat penilaian.</p>
+                    <?php endif; ?>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+</table>
+<?php endif; ?>
 
-            <?php foreach($data as $vendor):?>
-                <tr  align="center">
-                    <td><?php echo $no++?></td>
-                    <td><?php echo $vendor->nama_vendor?></td>
-                    <td><?php echo $vendor->alamat?></td>
-                    <td><?php echo $vendor->provinsi?></td>
-                    <td><?php echo $vendor->no_telepon_kantor?></td>
-                    <td>
-                    <?php echo anchor('data_vendor_ga/tampil_pic_maintenance/'.$vendor->id_vendor, '<div class="btn btn-info btn-sm">PIC Vendor</div>')?>    
-                    <?php echo anchor('data_vendor_ga/edit_maintenance_ga/'.$vendor->id_vendor, '<div class="btn btn-success btn-sm">Ubah</div>')?>
-                    <a onclick="deletedata()"  id_vendor="<?php echo $vendor->id_vendor?>" data-toggle="tooltip" data-placement="bottom" title="Hapus" class="btn btn-danger btn-sm delete text-white">Hapus</a>
-                    </td>
-                </tr>
-            <?php endforeach;?>
-        </table>
-        <?php endif;?>
 </div>
-
-<script>
-   function deletedata(){
-    $('.delete').click(function(){
-        var id_vendor = $(this).attr('id_vendor'); 
-        swal({
-            title: "Hapus Data?",
-            type:  "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#FF0000",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Ya",   
-        }, function(){ 
-            window.location = "../data_vendor_ga/hapus_maintenance/"+id_vendor+""
-        })
-      });
-   }
-</script>

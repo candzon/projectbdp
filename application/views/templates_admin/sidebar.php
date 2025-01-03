@@ -108,6 +108,13 @@
 
 			<!-- Nav Item - Pages Collapse Menu -->
 			<li
+				<?php
+				$alamat_collapse = $this->db->select('collapse_id')
+					->from('sys_alamat')
+					->order_by('collapse_id', 'ASC')
+					->get()
+					->row();
+				?>
 				<?= $this->uri->segment(2) == 'tampil_data_skdp' || $this->uri->segment(1) == 'data_skdp' || $this->uri->segment(2) == 'tampil_data_vendor' || $this->uri->segment(1) == 'data_vendor' || $this->uri->segment(2) == 'tampil_data_karyawan' || $this->uri->segment(1) == 'data_karyawan' || $this->uri->segment(2) == 'tampil_alamat' || $this->uri->segment(1) == 'data_alamat' ? 'class="nav-item active"' : 'class="nav-item"' ?>>
 				<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true"
 					aria-controls="collapseTwo">
@@ -120,6 +127,28 @@
 						<a class="collapse-item" href="<?php echo base_url('data_skdp/tampil_data_skdp') ?>">SKDP</a>
 						<a class="collapse-item" href="<?php echo base_url('data_akta/tampil_data_akta') ?>">Akta Sewa</a>
 						<a class="collapse-item" href="<?php echo base_url('data_pbb/tampil_data_pbb') ?>">PBB</a>
+					</div>
+				</div>
+			</li>
+
+			<!-- create cek dokumen with dropdown: cek dokumen skdp, cek dokumen -->
+			<li <?=
+					($this->uri->segment(1) == 'data_skdp' && $this->uri->segment(2) == 'cek_dokumen_skdp') ||
+						($this->uri->segment(1) == 'data_akta' && $this->uri->segment(2) == 'cek_dokumen_akta') ||
+						($this->uri->segment(1) == 'data_pbb' && $this->uri->segment(2) == 'cek_dokumen_pbb')
+						? 'class="nav-item active"'
+						: 'class="nav-item"' ?>>
+				<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#cekDokumen" aria-expanded="true"
+					aria-controls="collapseTwo">
+					<i class="far fa-check-square"></i>
+					<span>Cek Periode Dokumen</span>
+				</a>
+				<div id="cekDokumen" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+					<div class="bg-white py-2 collapse-inner rounded">
+						<h6 class="collapse-header">Cek Dokumen:</h6>
+						<a class="collapse-item" href="<?php echo base_url('data_skdp/cek_dokumen_skdp') ?>">SKDP</a>
+						<a class="collapse-item" href="<?php echo base_url('data_akta/cek_dokumen_akta') ?>">Akta Sewa</a>
+						<a class="collapse-item" href="<?php echo base_url('data_pbb/cek_dokumen_pbb') ?>">PBB</a>
 					</div>
 				</div>
 			</li>
@@ -152,6 +181,7 @@
 						<a class="collapse-item" href="<?php echo base_url('data_vendor_ga/tampil_maintenance_ga') ?>">Service /
 							Maintenance</a>
 						<a class="collapse-item" href="<?php echo base_url('data_vendor_ga/tampil_jasa_ga') ?>">Jasa</a>
+						<a class="collapse-item" href="<?php echo base_url('data_vendor_ga/tampil_penilaian_vendor_ga') ?>">Penilaian Vendor</a>
 					</div>
 				</div>
 			</li>
@@ -161,7 +191,7 @@
 
 			<!-- Nav Item - Dashboard -->
 			<li class="nav-item">
-				<a class="nav-link nav-link logout w3-hover-opacity" style="width:100%;cursor:pointer" onclick="logout()">
+				<a class="nav-link nav-link logout w3-hover-opacity" style="width:100%;cursor:pointer" onclick="showConfirmation('logout', 'Anda Yakin ingin Keluar ?', '../login/logout')">
 					<i class="fas fa-fw fa-door-open"></i>
 					<span>Keluar</span></a>
 			</li>
