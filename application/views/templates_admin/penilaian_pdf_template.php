@@ -1,114 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Evaluasi Penilaian Kinerja Supplier/Vendor</title>
     <style>
-    .container {
-        margin: 10px auto;
-        width: 90%;
-    }
-    .header {
-        text-align: center;
-    }
-    .table-header {
-        margin-top: 18px;
-    }
-    .header img {
-        margin: 0 13;
-        width: 130px;
-        height: auto;
-    }
-    .header h1 {
-        font-size: 14px;
-        margin: 0;
-    }
-    .header p {
-        font-size: 12px;
-        margin: 5px 0;
-    }
-    .section-title {
-        text-align: center;
-        background-color: #0070c0;
-        color: #ffffff;
-        padding: 3px;
-        font-size: 13px;
-        margin-top: 10px;
-    }
-    .table-container {
-        margin-top: 3px;
-    }
-    .table-container table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 12px;
-    }
-    .table-container th, td {
-        padding: 3px;
-        text-align: center;
-    }
-    .table-container th {
-        color: #ffffff;
-    }
-    .table-vendor table {
-        width: 100%;
-        padding: 0;
-        margin: 0;
-        border-collapse: collapse;
-        font-size: 12px;
-    }
-    .table-vendor td {
-        border: 0;
-        padding: 3px;
-        margin: 0;
-        text-align: left;
-    }
-    .table-vendor p {
-        font-weight: bold;
-        margin: 0;
-    }
-    .table-signature table {
-        margin-top: 25px;
-        width: 100%;
-        border-collapse: collapse;
-        text-align: center;
-        font-size: 12px;
-    }
-    .table-signature td {
-        border: 1;
-        padding: 0;
-    }
-    .note {
-        font-size: 12px;
-        margin-top: 10px;
-    }
-    .circle {
-        border: 2px solid black;
-        border-radius: 50%;
-        padding: 5px;
-        display: inline-block;
-    }
-    tfoot tr {
-    background-color: #f0f0f0;
-    font-weight: bold;
-    }
-    tfoot td {
-        padding: 5px;
-        text-align: center;
-    }
-</style>
+        .container {
+            margin: 10px auto;
+            width: 90%;
+        }
+
+        .header {
+            text-align: center;
+        }
+
+        .table-header {
+            margin-top: 18px;
+        }
+
+        .header img {
+            margin: 0 13;
+            width: 130px;
+            height: auto;
+        }
+
+        .header h1 {
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .header p {
+            font-size: 12px;
+            margin: 5px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            background-color: #0070c0;
+            color: #ffffff;
+            padding: 3px;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+
+        .table-container {
+            margin-top: 3px;
+        }
+
+        .table-container table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .table-container th,
+        td {
+            padding: 3px;
+            text-align: center;
+        }
+
+        .table-container th {
+            color: #ffffff;
+        }
+
+        .table-vendor table {
+            width: 100%;
+            padding: 0;
+            margin: 0;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .table-vendor td {
+            border: 0;
+            padding: 3px;
+            margin: 0;
+            text-align: left;
+        }
+
+        .table-vendor p {
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .table-signature table {
+            margin-top: 25px;
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .table-signature td {
+            border: 1;
+            padding: 0;
+        }
+
+        .note {
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .circle {
+            border: 2px solid black;
+            border-radius: 50%;
+            padding: 5px;
+            display: inline-block;
+        }
+
+        tfoot tr {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+
+        tfoot td {
+            padding: 5px;
+            text-align: center;
+        }
+    </style>
 
 </head>
+
 <body>
-<div class="container">
+    <div class="container">
         <div class="header">
             <p>Lampiran SE No. 021/SE/PBO/12/18</p>
             <div class="table-header">
                 <table>
                     <tr>
-                        <td><h1>FORMULIR EVALUASI PENILAIAN KINERJA SUPPLIER/VENDOR</h1></td>
-                        <td><img alt="BCA Insurance Logo" src="<?php echo base_url('assets/img/logo.png'); ?>"/></td>
+                        <td>
+                            <h1>FORMULIR EVALUASI PENILAIAN KINERJA SUPPLIER/VENDOR</h1>
+                        </td>
+                        <td><img alt="BCA Insurance Logo" src="<?php echo base_url('assets/img/logo.png'); ?>" /></td>
                     </tr>
                 </table>
             </div>
@@ -120,37 +144,44 @@
                     <tr>
                         <td style="width:30%"><label>Nama Perusahaan</label></td>
                         <td>:</td>
-                        <td><p><?php echo $vendor->nama_vendor; ?></p>
+                        <td>
+                            <p><?php echo $vendor->nama_vendor; ?></p>
                     </tr>
                     <tr>
                         <td style="width:30%"><label>Alamat Kantor</label></td>
                         <td>:</td>
-                        <td><p><?php echo $vendor->alamat; ?></p>
+                        <td>
+                            <p><?php echo $vendor->alamat; ?></p>
                     </tr>
                     <tr>
                         <td style="width:30%"><label>Nama User / PIC supplier</label></td>
                         <td>:</td>
-                        <td><p><?php echo $vendor->nama; ?></p>
+                        <td>
+                            <p><?php echo $vendor->nama; ?></p>
                     </tr>
                     <tr>
                         <td style="width:30%"><label>Email</label></td>
                         <td style="width:5%">:</td>
-                        <td><p><?php echo $vendor->email; ?></p>
+                        <td>
+                            <p><?php echo $vendor->email; ?></p>
                     </tr>
                     <tr>
                         <td style="width:30%"><label>Telpon</label></td>
                         <td style="width:5%">:</td>
-                        <td><p><?php echo $vendor->no_telepon_kantor; ?></p>
+                        <td>
+                            <p><?php echo $vendor->no_telepon_kantor; ?></p>
                     </tr>
                     <tr>
                         <td style="width:30%"><label>Jenis Pekerjaan</label></td>
                         <td style="width:5%">:</td>
-                        <td><p><?php echo $vendor->jenis_vendor; ?></p>
+                        <td>
+                            <p><?php echo $vendor->jenis_vendor; ?></p>
                     </tr>
                     <tr>
                         <td style="width:30%"><label>Tgl Evaluasi</label></td>
                         <td style="width:5%">:</td>
-                        <td><p><?php echo $tanggal_penilaian; ?></p>
+                        <td>
+                            <p><?php echo $tanggal_penilaian; ?></p>
                     </tr>
                 </tbody>
             </table>
@@ -161,75 +192,75 @@
         </div>
         <div class="table-container">
             <table>
-             <thead style="background-color:rgb(197, 149, 46);">
-              <tr>
-               <th colspan="2">
-                Tingkat Kepuasan
-               </th>
-               <th colspan="2">
-                Note
-               </th>
-              </tr>
-             </thead>
-             <tbody>
-              <tr>
-               <td>
-                Sangat Puas
-               </td>
-               <td>
-                5
-               </td>
-               <td>
-                A1 Vendor Rutin (ATK, Percetakan dan Peralatan Kantor)
-               </td>
-              </tr>
-              <tr>
-               <td>
-                Puas
-               </td>
-               <td>
-                4
-               </td>
-               <td>
-                A2 Vendor Renovasi
-               </td>
-              </tr>
-              <tr>
-               <td>
-                Antara Puas dan Tidak Puas
-               </td>
-               <td>
-                3
-               </td>
-               <td>
-                A3 Vendor Rental
-               </td>
-              </tr>
-              <tr>
-               <td>
-                Tidak Puas
-               </td>
-               <td>
-                2
-               </td>
-               <td>
-                B Komunikasi Vendor
-               </td>
-              </tr>
-              <tr>
-               <td>
-                Sangat Tidak Puas
-               </td>
-               <td>
-                1
-               </td>
-               <td>
-                C Proses Administrasi Keuangan
-               </td>
-              </tr>
-             </tbody>
+                <thead style="background-color:rgb(197, 149, 46);">
+                    <tr>
+                        <th colspan="2">
+                            Tingkat Kepuasan
+                        </th>
+                        <th colspan="2">
+                            Note
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            Sangat Puas
+                        </td>
+                        <td>
+                            5
+                        </td>
+                        <td>
+                            A1 Vendor Rutin (ATK, Percetakan dan Peralatan Kantor)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Puas
+                        </td>
+                        <td>
+                            4
+                        </td>
+                        <td>
+                            A2 Vendor Renovasi
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Antara Puas dan Tidak Puas
+                        </td>
+                        <td>
+                            3
+                        </td>
+                        <td>
+                            A3 Vendor Rental
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Tidak Puas
+                        </td>
+                        <td>
+                            2
+                        </td>
+                        <td>
+                            B Komunikasi Vendor
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Sangat Tidak Puas
+                        </td>
+                        <td>
+                            1
+                        </td>
+                        <td>
+                            C Proses Administrasi Keuangan
+                        </td>
+                    </tr>
+                </tbody>
             </table>
-           </div>
+        </div>
         <div class="table-container">
             <table>
                 <thead style="background-color:rgb(24, 84, 128);">
@@ -259,7 +290,25 @@
                 <tfoot>
                     <tr>
                         <td colspan="2" style="text-align: right;"><strong>Rata-rata</strong></td>
-                        <td><strong><?php echo number_format($rata_rata, 2); ?>/5</strong></td>
+                        <td><strong><?php echo round($rata_rata); ?>/5</strong></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: right;"><strong>Keterangan</strong></td>
+                        <td><strong>
+                                <?php
+                                if ($rata_rata == 5) {
+                                    echo "Sangat Puas";
+                                } elseif ($rata_rata == 4) {
+                                    echo "Puas";
+                                } elseif ($rata_rata == 3) {
+                                    echo "Antara Puas dan Tidak Puas";
+                                } elseif ($rata_rata == 2) {
+                                    echo "Tidak Puas";
+                                } elseif ($rata_rata == 1) {
+                                    echo "Sangat Tidak Puas";
+                                }
+                                ?>
+                            </strong></td>
                     </tr>
                 </tfoot>
             </table>
@@ -283,4 +332,5 @@
         </div>
     </div>
 </body>
+
 </html>
