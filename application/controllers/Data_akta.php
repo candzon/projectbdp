@@ -20,6 +20,18 @@ class Data_akta extends CI_Controller
 		$this->load->view('templates_admin/footer');
 	}
 
+	public function cek_dokumen_akta()
+	{
+		$data['data'] = $this->model_data_akta->get_period_parent();
+		$data['kantor'] = $this->model_data_alamat->findAll();
+		$data['karyawan'] = $this->model_data_karyawan->findAll();
+
+		$this->load->view('templates_admin/header');
+		$this->load->view('templates_admin/sidebar');
+		$this->load->view('admin/cek_akta', $data);
+		$this->load->view('templates_admin/footer');
+	}
+
 	public function get_kantor()
 	{
 		// prevent direct access

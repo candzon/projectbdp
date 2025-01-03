@@ -14,6 +14,33 @@ class Model_data_skdp extends CI_Model
 	}
 
 
+	public function cek_dokumen_period()
+	{
+		$this->db->select('a.*, b.nama AS deleted_by_user, c.*')
+			->from('sys_detail_skdp a')
+			->join('sys_akun b', 'b.id = a.deleted_by', 'left')
+			->join('sys_alamat c', 'c.nama_kantor = a.nama_kantor')
+			->where('a.periode_akhir >=', date('Y-m-d'))
+			->where('a.periode_akhir <=', date('Y-m-d', strtotime('+3 month')))
+			->order_by('id_detail_skdp', 'DESC');
+
+		return $this->db->get()->result();
+	}
+
+	public function count_period()
+	{
+		$this->db->select('a.*, b.nama AS deleted_by_user, c.*')
+			->from('sys_detail_skdp a')
+			->join('sys_akun b', 'b.id = a.deleted_by', 'left')
+			->join('sys_alamat c', 'c.nama_kantor = a.nama_kantor')
+			->where('a.periode_akhir >=', date('Y-m-d'))
+			->where('a.periode_akhir <=', date('Y-m-d', strtotime('+3 month')))
+			->where('a.deleted_at IS NULL')
+			->order_by('id_detail_skdp', 'DESC');
+
+		return $this->db->get()->result();
+	}
+
 	public function tampil_deleted_data($id_detail_skdp)
 	{
 		$this->db->select('sys_detail_skdp.*, sys_akun.nama AS deleted_by_user')

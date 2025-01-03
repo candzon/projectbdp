@@ -131,6 +131,28 @@
 				</div>
 			</li>
 
+			<!-- create cek dokumen with dropdown: cek dokumen skdp, cek dokumen -->
+			<li <?=
+					($this->uri->segment(1) == 'data_skdp' && $this->uri->segment(2) == 'cek_dokumen_skdp') ||
+						($this->uri->segment(1) == 'data_akta' && $this->uri->segment(2) == 'cek_dokumen_akta') ||
+						($this->uri->segment(1) == 'data_pbb' && $this->uri->segment(2) == 'cek_dokumen_pbb')
+						? 'class="nav-item active"'
+						: 'class="nav-item"' ?>>
+				<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#cekDokumen" aria-expanded="true"
+					aria-controls="collapseTwo">
+					<i class="far fa-check-square"></i>
+					<span>Cek Periode Dokumen</span>
+				</a>
+				<div id="cekDokumen" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+					<div class="bg-white py-2 collapse-inner rounded">
+						<h6 class="collapse-header">Cek Dokumen:</h6>
+						<a class="collapse-item" href="<?php echo base_url('data_skdp/cek_dokumen_skdp') ?>">SKDP</a>
+						<a class="collapse-item" href="<?php echo base_url('data_akta/cek_dokumen_akta') ?>">Akta Sewa</a>
+						<a class="collapse-item" href="<?php echo base_url('data_pbb/cek_dokumen_pbb') ?>">PBB</a>
+					</div>
+				</div>
+			</li>
+
 
 			<!-- Divider -->
 			<hr class="sidebar-divider my-0">

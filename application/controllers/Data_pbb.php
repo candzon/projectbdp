@@ -18,6 +18,18 @@ class Data_pbb extends CI_Controller
 		$this->load->view('templates_admin/footer');
 	}
 
+	public function cek_dokumen_pbb()
+	{
+		$data['data'] = $this->model_data_pbb->get_period_parent();
+
+		$data['kantor'] = $this->model_data_alamat->findAll();
+
+		$this->load->view('templates_admin/header');
+		$this->load->view('templates_admin/sidebar');
+		$this->load->view('admin/cek_pbb', $data);
+		$this->load->view('templates_admin/footer');
+	}
+
 	public function get_kantor()
 	{
 		// prevent direct access
@@ -61,7 +73,7 @@ class Data_pbb extends CI_Controller
 				];
 
 				$callback = $this->model_data_pbb->upload_dokumen($this->input->post('id'), $data);
-				
+
 				if ($callback) {
 					$this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Berhasil!</strong> Upload Dokumen Berhasil!<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
 					redirect('data_pbb/tampil_data_pbb');

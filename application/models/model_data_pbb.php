@@ -19,6 +19,47 @@ class Model_data_pbb extends CI_Model
 		return $this->db->get()->result();
 	}
 
+	public function get_period_parent()
+	{
+		$this->db->select('sys_pbb.*, sys_alamat.alamat')
+			->from('sys_detail_pbb')
+			->join('sys_pbb', 'sys_pbb.id = sys_detail_pbb.id_pbb')
+			->join('sys_alamat', 'sys_alamat.nama_kantor = sys_pbb.nama_kantor')
+			->where('sys_detail_pbb.tanggal_pembayaran >=', date('Y-m-d'))
+			->where('sys_detail_pbb.tanggal_pembayaran <=', date('Y-m-d', strtotime('+3 month')))
+			->group_by(['sys_pbb.id', 'sys_alamat.alamat'])
+			->order_by('sys_pbb.id', 'DESC');
+		return $this->db->get()->result();
+	}
+
+	public function get_period_child($id = null)
+	{
+		$this->db->select('a.*, b.nama AS deleted_by_user')
+			->from('sys_detail_pbb a')
+			->join('sys_akun b', 'b.id = a.deleted_by', 'left')
+			->where('a.tanggal_pembayaran >=', date('Y-m-d'))
+			->where('a.tanggal_pembayaran <=', date('Y-m-d', strtotime('+3 month')));
+		if ($id) {
+			$this->db->where('a.id_pbb', $id);
+		}
+		$this->db->order_by('a.id', 'DESC');
+
+		return $this->db->get()->result();
+	}
+
+	public function count_period()
+	{
+		$this->db->select('a.*, b.nama AS deleted_by_user')
+			->from('sys_detail_pbb a')
+			->join('sys_akun b', 'b.id = a.deleted_by', 'left')
+			->where('a.tanggal_pembayaran >=', date('Y-m-d'))
+			->where('a.tanggal_pembayaran <=', date('Y-m-d', strtotime('+3 month')))
+			->where('a.deleted_at IS NULL')
+			->order_by('a.id', 'DESC');
+
+		return $this->db->get()->result();
+	}
+
 	public function tampil_data()
 	{
 		// Ganti 'id' dengan kolom yang ada di sys_pbb

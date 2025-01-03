@@ -247,4 +247,18 @@ class Data_skdp extends CI_Controller
 			redirect('data_skdp/tampil_data_skdp');
 		}
 	}
+
+	public function cek_dokumen_skdp()
+	{
+		$data = [
+			'data' => $this->model_data_skdp->cek_dokumen_period(),
+			'alamat' => $this->model_data_skdp->getAlamatAndKantor(),
+			'getHeadKantor' => $this->model_data_skdp->getHeadKantor(),
+		];
+
+		$this->load->view('templates_admin/header');
+		$this->load->view('templates_admin/sidebar', $data);
+		$this->load->view('admin/cek_skdp', $data);
+		$this->load->view('templates_admin/footer');
+	}
 }
