@@ -13,7 +13,6 @@ class Model_data_skdp extends CI_Model
 		return $this->db->get()->result();
 	}
 
-
 	public function cek_dokumen_period()
 	{
 		$this->db->select('a.*, b.nama AS deleted_by_user, c.*')
@@ -40,6 +39,7 @@ class Model_data_skdp extends CI_Model
 
 		return $this->db->get()->result();
 	}
+
 
 	public function tampil_deleted_data($id_detail_skdp)
 	{
@@ -68,6 +68,7 @@ class Model_data_skdp extends CI_Model
 			return FALSE;
 		}
 	}
+
 	public function upload_dokumen($id, $data)
 	{
 		$this->db->where('id_detail_skdp', $id);

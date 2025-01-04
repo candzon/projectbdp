@@ -13,7 +13,6 @@ class Data_skdp extends CI_Controller
 		$periode_akhir = $this->input->get('periode_akhir');
 		$data['data'] = $this->model_data_skdp->tampil_data();
 
-		// var_dump($data['data']); die;
 		$data['alamat'] = $this->model_data_skdp->getAlamatAndKantor();
 		$data['getHeadKantor'] = $this->model_data_skdp->getHeadKantor();
 		$data['get_id_skdp'] = $this->db->select('a.*, b.*')
@@ -28,6 +27,20 @@ class Data_skdp extends CI_Controller
 		$this->load->view('templates_admin/header');
 		$this->load->view('templates_admin/sidebar', $data);
 		$this->load->view('admin/data_skdp', $data);
+		$this->load->view('templates_admin/footer');
+	}
+
+	public function cek_dokumen_skdp()
+	{
+		$data = [
+			'data' => $this->model_data_skdp->cek_dokumen_period(),
+			'alamat' => $this->model_data_skdp->getAlamatAndKantor(),
+			'getHeadKantor' => $this->model_data_skdp->getHeadKantor(),
+		];
+
+		$this->load->view('templates_admin/header');
+		$this->load->view('templates_admin/sidebar', $data);
+		$this->load->view('admin/cek_skdp', $data);
 		$this->load->view('templates_admin/footer');
 	}
 
@@ -89,7 +102,9 @@ class Data_skdp extends CI_Controller
 			$this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Berhasil!</strong> Menambah Data SKDP<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
 
 			// Redirect ke halaman data SKDP
-			redirect('data_skdp/tampil_data_skdp');
+			// redirect('data_skdp/tampil_data_skdp');
+			header('location:' . $_SERVER['HTTP_REFERER']);
+			die;
 		}
 	}
 
@@ -109,14 +124,22 @@ class Data_skdp extends CI_Controller
 
 		if ($insert) {
 			$this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Berhasil!</strong> Mengedit Data SKDP<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-			redirect('data_skdp/tampil_data_skdp');
+			// redirect('data_skdp/tampil_data_skdp');
+			// redirect back
+			header('location:' . $_SERVER['HTTP_REFERER']);
+			die;
 		} else {
 			$this->session->set_flashdata('message', '<div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Gagal!</strong> Mengedit Data SKDP<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-			redirect('data_skdp/tampil_data_skdp');
+			// redirect('data_skdp/tampil_data_skdp');
+			// redirect back
+			header('location:' . $_SERVER['HTTP_REFERER']);
+			die;
 		}
 
 		// redirect ke halaman data SKDP
-		redirect('data_skdp/tampil_data_skdp');
+		// redirect('data_skdp/tampil_data_skdp');
+		header('location:' . $_SERVER['HTTP_REFERER']);
+		die;
 	}
 
 	public function hapus_skdp($id_detail_skdp)
@@ -127,10 +150,14 @@ class Data_skdp extends CI_Controller
 		$return = $this->model_data_skdp->hapus_skdp($where, 'sys_detail_skdp');
 		if (!$return) {
 			$this->session->set_flashdata('message', '<div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Gagal!</strong> Menghapus Data SKDP<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-			redirect('data_skdp/tampil_data_skdp');
+			// redirect('data_skdp/tampil_data_skdp');
+			header('location:' . $_SERVER['HTTP_REFERER']);
+			die;
 		}
 		$this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Berhasil!</strong> Menghapus Data SKDP<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-		redirect('data_skdp/tampil_data_skdp');
+		// redirect('data_skdp/tampil_data_skdp');
+		header('location:' . $_SERVER['HTTP_REFERER']);
+		die;
 	}
 
 
@@ -165,6 +192,15 @@ class Data_skdp extends CI_Controller
 		if ($this->form_validation->run() == FALSE) {
 			// Jika validasi gagal, kembali ke form input
 			$this->edit_detail_skdp($this->input->post('id_detail_skdp'));
+
+			// Set pesan error
+			$this->session->set_flashdata('message', '<div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Gagal!</strong> Mengedit Data SKDP! Pastikan Data yang Diinputkan Benar dan Lengkap!<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+			// Redirect ke halaman data SKDP
+			// redirect('data_skdp/tampil_data_skdp');
+			// redirect back
+			header('location:' . $_SERVER['HTTP_REFERER']);
+			die;
 		} else {
 			// Simpan data ke database
 			$this->model_data_skdp->edit_skdp($data, 'sys_detail_skdp');
@@ -173,7 +209,10 @@ class Data_skdp extends CI_Controller
 			$this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Berhasil!</strong> Mengedit Data SKDP<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
 
 			// Redirect ke halaman data SKDP
-			redirect('data_skdp/tampil_data_skdp');
+			// redirect('data_skdp/tampil_data_skdp');
+			// redirect back
+			header('location:' . $_SERVER['HTTP_REFERER']);
+			die;
 		}
 	}
 
@@ -190,7 +229,9 @@ class Data_skdp extends CI_Controller
 
 		if ($file['name'] == '') {
 			$this->session->set_flashdata('message', '<div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Gagal!</strong> File Tidak Boleh Kosong!<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-			redirect('data_skdp/tampil_data_skdp');
+			// redirect('data_skdp/tampil_data_skdp');
+			header('location:' . $_SERVER['HTTP_REFERER']);
+			die;
 		} else {
 			if ($this->upload->do_upload('dokumen')) {
 				$data = $this->upload->data();
@@ -202,25 +243,32 @@ class Data_skdp extends CI_Controller
 				$callback = $this->model_data_skdp->upload_dokumen($this->input->post('id'), $data);
 				if ($callback) {
 					$this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Berhasil!</strong> Upload Dokumen SKDP Berhasil!<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-					redirect('data_skdp/tampil_data_skdp');
+					// redirect('data_skdp/tampil_data_skdp');
+					header('location:' . $_SERVER['HTTP_REFERER']);
+					die;
 				} else {
 					$this->session->set_flashdata('message', '<div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Gagal!</strong> Upload Dokumen SKDP Gagal! Pastikan File yang Diupload Berformat PDF, JPG, JPEG, PNG, DOC, atau DOCX dan Maksimal 100MB!<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-					redirect('data_skdp/tampil_data_skdp');
+					// redirect('data_skdp/tampil_data_skdp');
+					header('location:' . $_SERVER['HTTP_REFERER']);
+					die;
 				}
 			} else {
 				$this->session->set_flashdata('message', '<div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Gagal!</strong> Upload Dokumen SKDP Gagal! Pastikan File yang Diupload Berformat PDF, JPG, JPEG, PNG, DOC, atau DOCX dan Maksimal 100MB!<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-				redirect('data_skdp/tampil_data_skdp');
+				// redirect('data_skdp/tampil_data_skdp');
+				header('location:' . $_SERVER['HTTP_REFERER']);
+				die;
 			}
 		}
 
 		// redirect ke halaman data SKDP
-		redirect('data_skdp/tampil_data_skdp');
+		// redirect('data_skdp/tampil_data_skdp');
+		header('location:' . $_SERVER['HTTP_REFERER']);
+		die;
 	}
 
 	public function previewFile()
 	{
 		$nomor_skdp = $this->input->get('nomorskdp');
-
 
 		// get first data order by tanggal 
 		$query = $this->db->query("SELECT * FROM sys_detail_skdp WHERE nomor_skdp = '$nomor_skdp' ORDER BY dokumen_uploaded_at DESC LIMIT 1");
@@ -240,25 +288,15 @@ class Data_skdp extends CI_Controller
 				readfile($path);
 			} else {
 				echo "<script>alert('Dokumen Tidak Ditemukan!')</script>";
-				redirect('data_skdp/tampil_data_skdp');
+				// redirect('data_skdp/tampil_data_skdp');
+				header('location:' . $_SERVER['HTTP_REFERER']);
+				die;
 			}
 		} else {
 			echo "<script>alert('Dokumen Tidak Ditemukan!')</script>";
-			redirect('data_skdp/tampil_data_skdp');
+			// redirect('data_skdp/tampil_data_skdp');
+			header('location:' . $_SERVER['HTTP_REFERER']);
+			die;
 		}
-	}
-
-	public function cek_dokumen_skdp()
-	{
-		$data = [
-			'data' => $this->model_data_skdp->cek_dokumen_period(),
-			'alamat' => $this->model_data_skdp->getAlamatAndKantor(),
-			'getHeadKantor' => $this->model_data_skdp->getHeadKantor(),
-		];
-
-		$this->load->view('templates_admin/header');
-		$this->load->view('templates_admin/sidebar', $data);
-		$this->load->view('admin/cek_skdp', $data);
-		$this->load->view('templates_admin/footer');
 	}
 }

@@ -1,14 +1,25 @@
 <?php
 class Dashboard_admin extends CI_Controller
 {
+
+	public function __construct()
+	{
+		parent::__construct();
+		$this->load->model('model_data_akun');
+		$this->load->model('model_data_masa_sewa');
+		$this->load->model('model_data_skdp');
+		$this->load->model('model_data_pbb');
+		$this->load->model('model_data_akta');
+	}
+
 	public function index()
 	{
 
 		$data['jumlah_akun'] = $this->model_data_akun->jumlah_akun();
 		$data['jumlah_masa_sewa'] = $this->model_data_masa_sewa->jumlah_masa_sewa();
-		$data['jumlah_skdp'] = $this->db->count_all('sys_detail_skdp');
-		$data['jumlah_akta_sewa'] = $this->db->count_all('sys_detail_akta');
-		$data['jumlah_pbb'] = $this->db->count_all('sys_detail_pbb');
+		$data['jumlah_skdp'] = count($this->model_data_skdp->count_period());
+		$data['jumlah_akta_sewa'] = count($this->model_data_akta->count_period());
+		$data['jumlah_pbb'] = count($this->model_data_pbb->count_period());
 		$data['get_id_skdp'] = $this->db->select('a.*, b.collapse_id')
 			->from('sys_detail_skdp a')
 			->join('sys_alamat b', 'a.nama_kantor = b.nama_kantor')
@@ -18,12 +29,6 @@ class Dashboard_admin extends CI_Controller
 
 		$data['get_id_akta'] = $this->db->where('periode_akhir <', date('Y-m-d'))->get('sys_detail_akta')->result();
 		$data['get_id_pbb'] = $this->db->where('tanggal_pembayaran <', date('Y-m-d'))->get('sys_detail_pbb')->result();
-
-
-		// echo '<pre>';
-		// print_r($data['get_id_skdp']);
-		// echo '</pre>';
-		// die;
 
 		$this->load->view('templates_admin/header');
 		$this->load->view('templates_admin/sidebar');
