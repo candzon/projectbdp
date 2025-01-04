@@ -1,3 +1,7 @@
+<?php if ($this->session->flashdata('error')): ?>
+    <?= $this->session->flashdata('error'); ?>
+<?php endif; ?>
+
 <div class="container-fluid">
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Data PIC Vendor Maintenance</h1>

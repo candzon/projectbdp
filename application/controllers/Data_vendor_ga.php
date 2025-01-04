@@ -79,11 +79,18 @@ class Data_vendor_ga extends CI_Controller
         $rata_rata = $this->model_data_vendor_ga->get_penilaian_average($id_vendor, $tanggal_penilaian);
 
         // Validasi data
-        if (!$vendor || !$penilaian) {
-            log_message('error', 'Data vendor atau penilaian tidak ditemukan untuk ID: ' . $id_vendor . ' pada tanggal: ' . $tanggal_penilaian);
-            show_404();
-            return;
-        }
+        if (!$vendor->id_pic_vendor) {
+            $this->session->set_flashdata(
+                'error', 
+                '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>Gagal!!!</strong> Data PIC untuk vendor ' . $vendor->nama_vendor . ' tidak ada, tambahkan terlebih dahulu.
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>'
+            );
+            redirect("data_vendor_ga/tampil_pic_maintenance/{$id_vendor}");
+        }        
 
         // Siapkan data untuk template
         $data = [
@@ -91,6 +98,7 @@ class Data_vendor_ga extends CI_Controller
             'penilaian' => $penilaian,
             'tanggal_penilaian' => $tanggal_penilaian,
             'rata_rata' => $rata_rata,
+            'komentar' => $penilaian[0]->komentar_penilaian,
         ];
 
         // Load view untuk template PDF
@@ -1547,10 +1555,12 @@ class Data_vendor_ga extends CI_Controller
 
     public function tambah_penilaian_vendor_aksi()
     {
+        $this->load->model('model_data_vendor_ga');
         $id_vendor = $this->input->post('cari');
         $nilai_list = $this->input->post('nilai');
+        $komentar = $this->input->post('komentar');
 
-        // Validasi data
+        // Validasi input
         if (empty($id_vendor) || empty($nilai_list)) {
             $this->session->set_flashdata('error', 'Vendor atau nilai tidak boleh kosong.');
             redirect('data_vendor_ga/tampil_penilaian_vendor_ga');
@@ -1563,21 +1573,39 @@ class Data_vendor_ga extends CI_Controller
             }
         }
 
-        // Simpan data jika validasi lolos
-        $data_penilaian = [];
+        // Mulai proses penyimpanan
+        $this->db->trans_start();
+
+        // Simpan data header
+        $header_data = [
+            'id_penilaian_header' => uniqid(),
+            'id_vendor' => $id_vendor,
+            'komentar_penilaian' => $komentar,
+            'tanggal_penilaian' => date('Y-m-d'),
+        ];
+
+        $id_penilaian_header = $this->model_data_vendor_ga->simpan_penilaian_header($header_data);
+
+        // Simpan data detail
+        $detail_data = [];
         foreach ($nilai_list as $id_aspek_penilaian => $nilai) {
-            $data_penilaian[] = [
-                'id_vendor' => $id_vendor,
+            $detail_data[] = [
+                'id_penilaian_header' => $id_penilaian_header,
                 'id_aspek_penilaian' => $id_aspek_penilaian,
                 'nilai' => $nilai,
-                'tanggal_penilaian' => date('Y-m-d'),
             ];
         }
 
-        $this->load->model('model_data_vendor_ga');
-        $this->model_data_vendor_ga->simpan_penilaian($data_penilaian);
+        $this->model_data_vendor_ga->simpan_penilaian_detail($detail_data);
 
-        $this->session->set_flashdata('success', 'Penilaian berhasil disimpan.');
+        $this->db->trans_complete();
+
+        if ($this->db->trans_status() === false) {
+            $this->session->set_flashdata('error', 'Terjadi kesalahan saat menyimpan penilaian.');
+        } else {
+            $this->session->set_flashdata('success', 'Penilaian berhasil disimpan.');
+        }
+
         redirect('data_vendor_ga/tampil_penilaian_vendor_ga');
     }
 

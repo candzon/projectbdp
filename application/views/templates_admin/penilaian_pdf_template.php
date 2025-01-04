@@ -290,27 +290,35 @@
                 <tfoot>
                     <tr>
                         <td colspan="2" style="text-align: right;"><strong>Rata-rata</strong></td>
-                        <td><strong><?php echo round($rata_rata); ?>/5</strong></td>
+                        <td><strong><?php echo number_format($rata_rata, 2); ?>/5</strong></td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: right;"><strong>Keterangan</strong></td>
                         <td><strong>
                                 <?php
-                                if ($rata_rata == 5) {
-                                    echo "Sangat Puas";
-                                } elseif ($rata_rata == 4) {
-                                    echo "Puas";
-                                } elseif ($rata_rata == 3) {
-                                    echo "Antara Puas dan Tidak Puas";
-                                } elseif ($rata_rata == 2) {
-                                    echo "Tidak Puas";
-                                } elseif ($rata_rata == 1) {
-                                    echo "Sangat Tidak Puas";
-                                }
+                                    if ($rata_rata == 5) {
+                                        echo "Sangat Puas";
+                                    } elseif ($rata_rata >= 4 && $rata_rata < 5) {
+                                        echo "Puas";
+                                    } elseif ($rata_rata >= 3 && $rata_rata < 4) {
+                                        echo "Antara Puas dan Tidak Puas";
+                                    } elseif ($rata_rata >= 2 && $rata_rata < 3) {
+                                        echo "Tidak Puas";
+                                    } else {
+                                        echo "Sangat Tidak Puas";
+                                    }
                                 ?>
                             </strong></td>
                     </tr>
                 </tfoot>
+            </table>
+            <table style="margin-top: 5px">
+                <tr style="background-color:rgb(235, 177, 52); color: #ffffff;">
+                    <th><strong>Komentar</strong></th>
+                </tr>
+                <tr>
+                    <td style="text-align: left;"><?php echo $komentar; ?></td>
+                </tr>
             </table>
             <hr>
         </div>

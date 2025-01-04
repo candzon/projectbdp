@@ -95,4 +95,20 @@
 </table>
 <?php endif; ?>
 
-</div>
+</div><script>
+   function deletedata(){
+    $('.delete').click(function(){
+        var id_vendor = $(this).attr('id_vendor'); 
+        swal({
+            title: "Hapus Data?",
+            type:  "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#FF0000",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya",   
+        }, function(){ 
+            window.location = "../data_vendor_ga/hapus_maintenance/"+id_vendor+""
+        })
+      });
+   }
+   </script>

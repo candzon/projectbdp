@@ -53,10 +53,21 @@ class Model_data_vendor_ga extends CI_Model
         }
     }
 
-    public function simpan_penilaian($data_penilaian)
+    public function simpan_penilaian_header($data)
     {
-        $this->db->insert_batch('sys_penilaian', $data_penilaian);
+        $this->db->insert('sys_penilaian_header', $data);
+        return $data['id_penilaian_header'];
     }
+
+    public function simpan_penilaian_detail($data)
+    {
+        $this->db->insert_batch('sys_penilaian_detail', $data);
+    }
+
+    // public function simpan_penilaian($data_penilaian)
+    // {
+    //     $this->db->insert_batch('sys_penilaian', $data_penilaian);
+    // }
 
     public function tambah_penilaian_vendor($data, $table)
     {
@@ -110,10 +121,9 @@ class Model_data_vendor_ga extends CI_Model
     }
     
     public function get_penilaian_by_vendor($id_vendor) {
-        $this->db->distinct();
         $this->db->select('id_vendor, tanggal_penilaian');
         $this->db->where('id_vendor', $id_vendor);
-        $query = $this->db->get('sys_penilaian');
+        $query = $this->db->get('sys_penilaian_header');
         
         if ($query->num_rows() > 0) {
             return $query->result();
@@ -140,29 +150,28 @@ class Model_data_vendor_ga extends CI_Model
 
     public function get_penilaian_by_vendor_and_date($id_vendor, $tanggal_penilaian)
     {
-        $this->db->select('p.*, a.aspek_penilaian, k.kode_kategori');
-        $this->db->from('sys_penilaian p');
-        $this->db->join('sys_aspek_penilaian a', 'p.id_aspek_penilaian = a.id_aspek_penilaian', 'inner');
+        $this->db->select('d.*, a.aspek_penilaian, h.komentar_penilaian, k.kode_kategori, k.keterangan AS kategori_keterangan');
+        $this->db->from('sys_penilaian_detail d');
+        $this->db->join('sys_penilaian_header h', 'd.id_penilaian_header = h.id_penilaian_header', 'inner');
+        $this->db->join('sys_aspek_penilaian a', 'd.id_aspek_penilaian = a.id_aspek_penilaian', 'inner');
         $this->db->join('sys_kategori_penilaian k', 'a.id_kategori = k.id_kategori', 'inner');
-        $this->db->where('p.id_vendor', $id_vendor);
-        $this->db->where('p.tanggal_penilaian', $tanggal_penilaian);
-        $this->db->order_by('p.id_aspek_penilaian');
-    
-        $query = $this->db->get();
+        $this->db->where('h.id_vendor', $id_vendor);
+        $this->db->where('h.tanggal_penilaian', $tanggal_penilaian);
+        $this->db->order_by('a.id_aspek_penilaian', 'ASC');
         
+        $query = $this->db->get();
         return $query->result();
     }
 
     public function get_penilaian_average($id_vendor, $tanggal_penilaian)
     {
-        $this->db->select('AVG(p.nilai) AS rata_rata');
-        $this->db->from('sys_penilaian p');
-        $this->db->where('p.id_vendor', $id_vendor);
-        $this->db->where('p.tanggal_penilaian', $tanggal_penilaian);
-        $this->db->order_by('p.id_aspek_penilaian');
-    
-        $query = $this->db->get();
+        $this->db->select('AVG(d.nilai) AS rata_rata');
+        $this->db->from('sys_penilaian_detail d');
+        $this->db->join('sys_penilaian_header h', 'd.id_penilaian_header = h.id_penilaian_header', 'inner');
+        $this->db->where('h.id_vendor', $id_vendor);
+        $this->db->where('h.tanggal_penilaian', $tanggal_penilaian);
         
+        $query = $this->db->get();
         $result = $query->row();
         return $result ? $result->rata_rata : null;
     }
