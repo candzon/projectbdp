@@ -77,6 +77,19 @@ class Data_vendor_ga extends CI_Controller
         $vendor = $this->model_data_vendor_ga->get_pic_join_vendor_by_id($id_vendor);
         $penilaian = $this->model_data_vendor_ga->get_penilaian_by_vendor_and_date($id_vendor, $tanggal_penilaian);
         $rata_rata = $this->model_data_vendor_ga->get_penilaian_average($id_vendor, $tanggal_penilaian);
+        $result = $this->db->select('tanggal_penilaian')
+                          ->from('sys_penilaian_header')
+                          ->where('id_vendor', $id_vendor)
+                          ->where('tanggal_penilaian', $tanggal_penilaian)
+                          ->get()
+                          ->row();
+
+        if (!$result) {
+            $this->session->set_flashdata('error', 'Data penilaian tidak ditemukan.');
+            redirect('data_vendor_ga/tampil_maintenance_ga');
+        }
+
+        $tanggal_penilaian = $result->tanggal_penilaian;
 
         // Validasi data
         if (!$vendor->id_pic_vendor) {
@@ -99,6 +112,7 @@ class Data_vendor_ga extends CI_Controller
             'tanggal_penilaian' => $tanggal_penilaian,
             'rata_rata' => $rata_rata,
             'komentar' => $penilaian[0]->komentar_penilaian,
+            'tanggal_penilaian' => $tanggal_penilaian,
         ];
 
         // Load view untuk template PDF

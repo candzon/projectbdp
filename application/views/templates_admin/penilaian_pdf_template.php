@@ -125,7 +125,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <p>Lampiran SE No. 021/SE/PBO/12/18</p>
+            <p>Lampiran SE No. <?php echo sprintf('%03d', $vendor->id_vendor); ?>/SE/PBO/<?= date('m/d/y', strtotime($tanggal_penilaian)) ?></p>
             <div class="table-header">
                 <table>
                     <tr>
@@ -296,17 +296,17 @@
                         <td colspan="2" style="text-align: right;"><strong>Keterangan</strong></td>
                         <td><strong>
                                 <?php
-                                    if ($rata_rata == 5) {
-                                        echo "Sangat Puas";
-                                    } elseif ($rata_rata >= 4 && $rata_rata < 5) {
-                                        echo "Puas";
-                                    } elseif ($rata_rata >= 3 && $rata_rata < 4) {
-                                        echo "Antara Puas dan Tidak Puas";
-                                    } elseif ($rata_rata >= 2 && $rata_rata < 3) {
-                                        echo "Tidak Puas";
-                                    } else {
-                                        echo "Sangat Tidak Puas";
-                                    }
+                                if ($rata_rata == 5) {
+                                    echo "Sangat Puas";
+                                } elseif ($rata_rata >= 4 && $rata_rata < 5) {
+                                    echo "Puas";
+                                } elseif ($rata_rata >= 3 && $rata_rata < 4) {
+                                    echo "Antara Puas dan Tidak Puas";
+                                } elseif ($rata_rata >= 2 && $rata_rata < 3) {
+                                    echo "Tidak Puas";
+                                } else {
+                                    echo "Sangat Tidak Puas";
+                                }
                                 ?>
                             </strong></td>
                     </tr>
